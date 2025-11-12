@@ -45,5 +45,18 @@ export const skillTree = {
     "Sprint Planning",
     "Retrospectives",
   ],
+  "Agentic AI": [
+    "LangChain",
+    "LlamaIndex",
+    "OpenAI API",
+    "Hugging Face Transformers",
+    "CrewAI",
+    "AutoGen",
+    "Function Calling (OpenAI / Anthropic)",
+    "Prompt Engineering",
+    "Vector Databases (Pinecone, FAISS, ChromaDB)",
+    "RAG Pipelines",
+    "Agent Workflows & Memory Management",
+  ],
 };
 

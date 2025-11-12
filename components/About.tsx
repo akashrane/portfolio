@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { FaLinkedin, FaKaggle, FaGithub, FaGoogle } from "react-icons/fa";
+import { SiLeetcode } from "react-icons/si";
 
 const About = () => {
   return (
@@ -9,7 +11,7 @@ const About = () => {
         <h2 className="text-2xl font-semibold text-white mb-8">About</h2>
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-10 items-center sm:items-start">
           {/* Left Column: Profile Image */}
-          <div className="flex-shrink-0 flex items-center justify-center sm:justify-start">
+          <div className="flex-shrink-0 flex flex-col items-center sm:items-start">
             <div className="overflow-hidden transition-transform hover:scale-[1.02]">
               <Image
                 src="/profile.jpg"
@@ -19,6 +21,54 @@ const About = () => {
                 className="w-[180px] sm:w-[200px] h-[180px] sm:h-[200px] object-cover"
                 priority
               />
+            </div>
+            {/* Profile Icons Below Photo */}
+            <div className="flex gap-5 mt-4 text-gray-400">
+              <a
+                href="https://www.linkedin.com/in/akashrane/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#0077B5] transition-colors hover:scale-110 duration-200"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin size={24} />
+              </a>
+              <a
+                href="https://www.kaggle.com/akashrane2609"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#20BEFF] transition-colors hover:scale-110 duration-200"
+                aria-label="Kaggle"
+              >
+                <FaKaggle size={24} />
+              </a>
+              <a
+                href="https://github.com/akashrane"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors hover:scale-110 duration-200"
+                aria-label="GitHub"
+              >
+                <FaGithub size={24} />
+              </a>
+              <a
+                href="https://leetcode.com/u/Akash_rane/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#FFA116] transition-colors hover:scale-110 duration-200"
+                aria-label="LeetCode"
+              >
+                <SiLeetcode size={24} />
+              </a>
+              <a
+                href="https://developers.google.com/profile/u/akash_rane"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#DB4437] transition-colors hover:scale-110 duration-200"
+                aria-label="Google Developers"
+              >
+                <FaGoogle size={24} />
+              </a>
             </div>
           </div>
           {/* Right Column: About Text */}

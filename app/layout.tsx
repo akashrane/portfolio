@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "John Doe - Full Stack Developer",
-  description: "Personal portfolio of John Doe, Full Stack Developer",
+  title: "Akash Rane Portfolio",
+  description: "Personal portfolio of Akash Rane — Masters in Computer Science showcasing projects and publications.",
 };
 
 export default function RootLayout({
