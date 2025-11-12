@@ -3,8 +3,8 @@ import About from "@/components/About";
 import Projects from "@/components/Projects";
 import Publications from "@/components/Publications";
 import Skills from "@/components/Skills";
-import Profiles from "@/components/Profiles";
 import Resume from "@/components/Resume";
+import Certifications from "@/components/Certifications";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -15,8 +15,7 @@ export default function Home() {
       <Projects />
       <Skills />
       <Publications />
-      <Profiles />
-      <Resume />
+      <Certifications />
       <Footer />
     </main>
   );
