@@ -5,16 +5,32 @@ const Certifications = () => {
         <h2 className="text-3xl font-semibold text-white mb-8 border-b border-gray-700 pb-2">Certifications</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
-          
+
+
+
+          {/* 5-Day AI Agents Intensive Course with Google */}
+          <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
+            <img src="/assets/certificates/google-ai-agents.png" alt="5-Day AI Agents Intensive Course with Google" className="rounded-lg mb-3 shadow-md" />
+            <h3 className="text-white font-medium text-[15px]">5-Day AI Agents Intensive Course with Google</h3>
+            <p className="text-gray-400 text-xs mt-1">Kaggle · Google</p>
+            <p className="text-gray-500 text-[11px]">Issued Nov 2025</p>
+          </div>
+
 
           {/* Machine Learning Specialization */}
-          <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 md:p-5 hover:bg-[#2a2a2a] transition-colors duration-200">
-            <div className="flex items-center gap-3 mb-2">
-              <img src="/assets/logos/stanford.svg" alt="Stanford" className="w-5 h-5 opacity-90" />
-              <h3 className="text-white font-medium text-[15px] leading-snug">Machine Learning Specialization</h3>
-            </div>
-            <p className="text-gray-400 text-xs mb-1">DeepLearning.AI · Coursera · Stanford CPD</p>
+          <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
+            <img src="/assets/certificates/stanford-ml.jpg" alt="Machine Learning Specialization" className="rounded-lg mb-3 shadow-md" />
+            <h3 className="text-white font-medium text-[15px]">Machine Learning Specialization</h3>
+            <p className="text-gray-400 text-xs mt-1">DeepLearning.AI · Coursera · Stanford CPD</p>
             <p className="text-gray-500 text-[11px]">Issued Jun 2025</p>
+          </div>
+
+          {/* MongoDB SQL for Pros */}
+          <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
+            <img src="/assets/certificates/mongodb-sql.jpg" alt="MongoDB SQL for Pros" className="rounded-lg mb-3 shadow-md" />
+            <h3 className="text-white font-medium text-[15px]">MongoDB SQL for Pros</h3>
+            <p className="text-gray-400 text-xs mt-1">MongoDB</p>
+            <p className="text-gray-500 text-[11px]">Issued Nov 2020</p>
           </div>
 
           {/* Python for Data Professionals in Finance */}
@@ -32,6 +48,7 @@ const Certifications = () => {
             <img src="public/assets/certificates/certificate1.png" alt="Intermediate Machine Learning" className="rounded-lg mb-3 shadow-md" />
             <h3 className="text-white font-medium text-[15px]">Intermediate Machine Learning</h3>
             <p className="text-gray-400 text-xs mt-1">Kaggle · DeepLearning.AI</p>
+
             <p className="text-gray-500 text-[11px]">Issued Sep 2025</p>
           </div>
 
@@ -42,7 +59,6 @@ const Certifications = () => {
             <p className="text-gray-400 text-xs mt-1">Kaggle · DeepLearning.AI</p>
             <p className="text-gray-500 text-[11px]">Issued Apr 2024</p>
           </div>
-
 
           {/* INSPIRE Program Certification */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 md:p-5 hover:bg-[#2a2a2a] transition-colors duration-200">
@@ -64,15 +80,6 @@ const Certifications = () => {
             <p className="text-gray-500 text-[11px]">Issued Jan 2023</p>
           </div>
 
-          {/* MongoDB SQL for Pros */}
-          <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 md:p-5 hover:bg-[#2a2a2a] transition-colors duration-200">
-            <div className="flex items-center gap-3 mb-2">
-              <img src="/assets/logos/mongodb.svg" alt="MongoDB" className="w-5 h-5 opacity-90" />
-              <h3 className="text-white font-medium text-[15px] leading-snug">MongoDB SQL for Pros</h3>
-            </div>
-            <p className="text-gray-400 text-xs mb-1">MongoDB</p>
-            <p className="text-gray-500 text-[11px]">Issued Nov 2020</p>
-          </div>
 
           {/* Android Development (Udemy) */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 md:p-5 hover:bg-[#2a2a2a] transition-colors duration-200">
@@ -84,7 +91,7 @@ const Certifications = () => {
             <p className="text-gray-500 text-[11px]">Issued Jan 2020</p>
           </div>
 
-                    {/* Kaggle - Python */}
+          {/* Kaggle - Python */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
             <img src="/assets/certificates/akash-python.png" alt="Python" className="rounded-lg mb-3 shadow-md" />
             <h3 className="text-white font-medium text-[15px]">Python</h3>
@@ -112,7 +119,7 @@ const Certifications = () => {
 
         </div>
       </div>
-  </section>
+    </section>
   );
 };
 

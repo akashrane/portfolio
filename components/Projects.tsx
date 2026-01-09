@@ -1,14 +1,25 @@
 "use client";
+import { FaGithub, FaYoutube } from "react-icons/fa";
 
 interface Project {
   id: number;
   name: string;
   description: string;
   tech: string[];
-  githubUrl: string;
+  githubUrl?: string;
+  videoUrl?: string;
 }
 
 const projects: Project[] = [
+  {
+    id: 101, // Giving it a high ID or 0 to be top
+    name: "FinStream – Financial Market Analytics Platform",
+    description:
+      "Full-stack web application for portfolio tracking and market analysis. Features real-time data, secure auth, and subscription payments.",
+    tech: ["React", "TypeScript", "Node.js", "REST APIs"],
+    githubUrl: "https://github.com/akashrane/FinStream",
+    videoUrl: "https://drive.google.com/file/d/1TQyOq37F1EtofhfGkHPbR9Tbuk7wj1A8/view?usp=drive_link",
+  },
   {
     id: 1,
     name: "amex-default-prediction",
@@ -23,7 +34,8 @@ const projects: Project[] = [
     description:
       "Full-stack platform for home-food businesses to manage orders via WhatsApp integration.",
     tech: ["React", "Node.js", "MongoDB", "WhatsApp-API", "Firebase"],
-    githubUrl: "https://drive.google.com/file/d/1ddrhnDqn3GXgoEDEyX6sbDYMtdzYVUGi/view",
+    githubUrl: "https://github.com/akashrane/kurry-kitchen",
+    videoUrl: "https://drive.google.com/file/d/1ddrhnDqn3GXgoEDEyX6sbDYMtdzYVUGi/view",
   },
   {
     id: 3,
@@ -67,16 +79,34 @@ const Projects = () => {
               key={project.id}
               className="border border-gray-600 rounded p-4 hover:border-white transition-colors"
             >
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block mb-2"
-              >
-                <h3 className="text-lg font-bold text-white hover:underline mb-2">
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-lg font-bold text-white mb-1">
                   {project.name}
                 </h3>
-              </a>
+                <div className="flex gap-3">
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm text-white transition-colors"
+                    >
+                      <FaGithub /> Code
+                    </a>
+                  )}
+                  {project.videoUrl && (
+                    <a
+                      href={project.videoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-sm text-white transition-colors"
+                    >
+                      <FaYoutube /> Watch Demo
+                    </a>
+                  )}
+                </div>
+              </div>
+
               <p className="text-sm text-white opacity-80 mb-3">
                 {project.description}
               </p>
