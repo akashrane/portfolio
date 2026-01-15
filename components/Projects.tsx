@@ -21,6 +21,14 @@ const projects: Project[] = [
     videoUrl: "https://drive.google.com/file/d/1TQyOq37F1EtofhfGkHPbR9Tbuk7wj1A8/view?usp=drive_link",
   },
   {
+    id: 102,
+    name: "Sequence Board Game Simulator",
+    description:
+      "Fully rules-accurate digital implementation of Sequence with smart AI bots, Monte Carlo fairness analysis, and a Streamlit web interface.",
+    tech: ["Python", "Streamlit", "AI/ML", "Simulation"],
+    githubUrl: "https://github.com/akashrane/Sequence",
+  },
+  {
     id: 1,
     name: "amex-default-prediction",
     description:
