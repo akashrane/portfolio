@@ -1,5 +1,6 @@
 "use client";
-import { FaGithub, FaYoutube } from "react-icons/fa";
+import { useState } from "react";
+import { FaGithub, FaYoutube, FaExternalLinkAlt } from "react-icons/fa";
 
 interface Project {
   id: number;
@@ -8,9 +9,30 @@ interface Project {
   tech: string[];
   githubUrl?: string;
   videoUrl?: string;
+  visitUrl?: string;
 }
 
 const projects: Project[] = [
+  {
+    id: 102,
+    name: "Sequence Pro – Multiplayer Strategy Game Simulator",
+    description: `Designed and built a full-stack, real-time web application that digitizes the popular board game "Sequence". The platform features a robust game engine, real-time multiplayer capabilities, and an advanced AI simulation laboratory for strategy analysis.
+
+Key Features:
+• Real-Time Multiplayer: Engineered a low-latency WebSocket architecture using FastAPI, enabling players to create private rooms, join via codes, and play turn-based matches with live state synchronization.
+• Advanced Game Engine: Developed a deterministic Python game engine handling complex rules (Two-Eyed/One-Eyed Jacks, corner locking, sequence validation) with 100% accuracy.
+• AI & Simulation Lab: Implemented a Monte Carlo Simulation system to run thousands of AI-vs-AI games in parallel, generating statistical insights on win rates and turn efficiency using Pandas.
+• Modern Interactive UI: Built a responsive, high-fidelity frontend with React, TypeScript, and Tailwind CSS. Features include a 3D-perspective board, Framer Motion animations for card plays, and a glassmorphism design aesthetic.
+• Resilient Architecture: Implemented a robust "Slot System" for player connection management, ensuring session stability and automatic reconnection handling.
+
+Tech Stack:
+Frontend: React, TypeScript, Vite, Tailwind CSS, Framer Motion, Lucide React.
+Backend: Python, FastAPI, WebSockets, Uvicorn, Pandas (Data Analysis).
+Architecture: Client-Server model with REST APIs for game management and WebSockets for real-time gameplay events.`,
+    tech: ["React", "TypeScript", "FastAPI", "WebSockets", "Python", "TailwindCSS"],
+    githubUrl: "https://github.com/akashrane/Sequence",
+    visitUrl: "https://sequence-kohl.vercel.app/",
+  },
   {
     id: 101, // Giving it a high ID or 0 to be top
     name: "FinStream – Financial Market Analytics Platform",
@@ -18,15 +40,8 @@ const projects: Project[] = [
       "Full-stack web application for portfolio tracking and market analysis. Features real-time data, secure auth, and subscription payments.",
     tech: ["React", "TypeScript", "Node.js", "REST APIs"],
     githubUrl: "https://github.com/akashrane/FinStream",
-    videoUrl: "https://drive.google.com/file/d/1TQyOq37F1EtofhfGkHPbR9Tbuk7wj1A8/view?usp=drive_link",
-  },
-  {
-    id: 102,
-    name: "Sequence Board Game Simulator",
-    description:
-      "Fully rules-accurate digital implementation of Sequence with smart AI bots, Monte Carlo fairness analysis, and a Streamlit web interface.",
-    tech: ["Python", "Streamlit", "AI/ML", "Simulation"],
-    githubUrl: "https://github.com/akashrane/Sequence",
+    videoUrl:
+      "https://drive.google.com/file/d/1TQyOq37F1EtofhfGkHPbR9Tbuk7wj1A8/view?usp=drive_link",
   },
   {
     id: 1,
@@ -34,7 +49,8 @@ const projects: Project[] = [
     description:
       "ML model to predict credit card default using a large-scale, imbalanced dataset.",
     tech: ["Python", "Dask", "Scikit-learn", "XGBoost", "SHAP"],
-    githubUrl: "https://colab.research.google.com/drive/1i0NGQfRjqxhq1-tOWCShLuWgTA2jRpf_?usp=sharing",
+    githubUrl:
+      "https://colab.research.google.com/drive/1i0NGQfRjqxhq1-tOWCShLuWgTA2jRpf_?usp=sharing",
   },
   {
     id: 2,
@@ -43,7 +59,8 @@ const projects: Project[] = [
       "Full-stack platform for home-food businesses to manage orders via WhatsApp integration.",
     tech: ["React", "Node.js", "MongoDB", "WhatsApp-API", "Firebase"],
     githubUrl: "https://github.com/akashrane/kurry-kitchen",
-    videoUrl: "https://drive.google.com/file/d/1ddrhnDqn3GXgoEDEyX6sbDYMtdzYVUGi/view",
+    videoUrl:
+      "https://drive.google.com/file/d/1ddrhnDqn3GXgoEDEyX6sbDYMtdzYVUGi/view",
   },
   {
     id: 3,
@@ -51,7 +68,8 @@ const projects: Project[] = [
     description:
       "Time-series model using Prophet to forecast NYC electricity consumption for energy planning.",
     tech: ["Python", "Prophet", "Pandas", "Scikit-learn"],
-    githubUrl: "https://www.kaggle.com/code/akashrane2609/nyc-electric-consumption-forecasting-prophet-model/notebook",
+    githubUrl:
+      "https://www.kaggle.com/code/akashrane2609/nyc-electric-consumption-forecasting-prophet-model/notebook",
   },
   {
     id: 4,
@@ -71,6 +89,78 @@ const projects: Project[] = [
   },
 ];
 
+const ProjectCard = ({ project }: { project: Project }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const shouldTruncate = project.description.length > 150;
+
+  const displayDescription = isExpanded
+    ? project.description
+    : project.description.slice(0, 150) + (shouldTruncate ? "..." : "");
+
+  return (
+    <div className="border border-gray-600 rounded p-4 hover:border-white transition-colors bg-[#1f1f1f]">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
+        <h3 className="text-lg font-bold text-white mb-1">{project.name}</h3>
+        <div className="flex flex-wrap gap-3">
+          {project.visitUrl && (
+            <a
+              href={project.visitUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded text-sm text-white font-semibold transition-all shadow-lg hover:shadow-cyan-500/20"
+            >
+              <FaExternalLinkAlt /> Visit App
+            </a>
+          )}
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm text-white transition-colors"
+            >
+              <FaGithub /> Code
+            </a>
+          )}
+          {project.videoUrl && (
+            <a
+              href={project.videoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-sm text-white transition-colors"
+            >
+              <FaYoutube /> Watch Demo
+            </a>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-3 text-sm text-white opacity-90 whitespace-pre-line">
+        {displayDescription}
+        {shouldTruncate && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="ml-2 text-blue-400 hover:text-blue-300 font-medium focus:outline-none underline"
+          >
+            {isExpanded ? "Show Less" : "Read More"}
+          </button>
+        )}
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {project.tech.map((tech) => (
+          <span
+            key={tech}
+            className="px-2 py-1 text-xs text-white border border-gray-600 rounded hover:border-white hover:text-white transition-colors"
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Projects = () => {
   return (
     <section
@@ -78,57 +168,10 @@ const Projects = () => {
       className="py-16 px-4 sm:px-6 lg:px-8 bg-[#1f1f1f] border-t border-gray-600"
     >
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl font-semibold text-white mb-6">
-          Projects
-        </h2>
+        <h2 className="text-2xl font-semibold text-white mb-6">Projects</h2>
         <div className="space-y-4">
           {projects.map((project) => (
-            <div
-              key={project.id}
-              className="border border-gray-600 rounded p-4 hover:border-white transition-colors"
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-bold text-white mb-1">
-                  {project.name}
-                </h3>
-                <div className="flex gap-3">
-                  {project.githubUrl && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm text-white transition-colors"
-                    >
-                      <FaGithub /> Code
-                    </a>
-                  )}
-                  {project.videoUrl && (
-                    <a
-                      href={project.videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-sm text-white transition-colors"
-                    >
-                      <FaYoutube /> Watch Demo
-                    </a>
-                  )}
-                </div>
-              </div>
-
-              <p className="text-sm text-white opacity-80 mb-3">
-                {project.description}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-2 py-1 text-xs text-white border border-gray-600 rounded hover:border-white hover:text-white transition-colors"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       </div>
