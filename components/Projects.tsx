@@ -34,6 +34,32 @@ Architecture: Client-Server model with REST APIs for game management and WebSock
     visitUrl: "https://sequence-kohl.vercel.app/",
   },
   {
+    id: 103,
+    name: "Global Supply Chain Control Tower – AI-Driven Logistics Optimization Platform",
+    description: `Developed an end-to-end analytical platform designed to transform static supply chain data into actionable intelligence. The "Control Tower" provides real-time visibility into global logistics, utilizes Machine Learning to predict shipment delays, and enables strategic "What-If" scenario planning.
+
+Key Features:
+• Advanced Visualization: Interactive Plotly dashboards featuring global heatmaps, dynamic SLA gauges, and a NetworkX graph modeling physical logistics flows.
+• Predictive AI: Trained a Random Forest classification model to predict the probability of late deliveries at the order level, allowing for proactive risk mitigation.
+• AI Analyst Agent: Integrated a natural language chatbot that enables users to query data (e.g., "Show me top 5 losing products") and generates charts on the fly.
+• Strategy Simulation: Built a "What-If" simulator that quantifies the financial impact of operational changes (e.g., reducing shipping days by 1).
+• Automated Reporting: Engineered a one-click PDF Executive Brief generator using FPDF for instant stakeholder reporting.
+
+Technical Constraints Solved:
+• Implemented a Star Schema data model for efficient querying.
+• Solved GitHub file size limits by engineering a custom "Split & Merge" data loader to handle 100MB+ datasets seamlessly in cloud deployments.`,
+    tech: [
+      "Python",
+      "Streamlit",
+      "Pandas",
+      "Scikit-Learn",
+      "Plotly",
+      "NetworkX",
+    ],
+    visitUrl: "https://akashraneglobalsuppychaincontroltower.streamlit.app/",
+    githubUrl: "https://github.com/akashrane/Global-Supply-Chain-Control-Tower",
+  },
+  {
     id: 101, // Giving it a high ID or 0 to be top
     name: "FinStream – Real-Time Financial Analytics Platform",
     description: `FinStream is a comprehensive financial dashboard that empowers users to track stock market trends, manage portfolios, and analyze assets in real-time. The application utilizes a scalable microservices architecture to handle high-frequency data updates and complex analytical tasks. Key features include a customizable watchlist with interactive candlestick charts, automated email alerts for price movements, and a premium subscription model with PDF invoice generation.
