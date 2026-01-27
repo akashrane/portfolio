@@ -35,11 +35,27 @@ Architecture: Client-Server model with REST APIs for game management and WebSock
   },
   {
     id: 101, // Giving it a high ID or 0 to be top
-    name: "FinStream – Financial Market Analytics Platform",
-    description:
-      "Full-stack web application for portfolio tracking and market analysis. Features real-time data, secure auth, and subscription payments.",
-    tech: ["React", "TypeScript", "Node.js", "REST APIs"],
+    name: "FinStream – Real-Time Financial Analytics Platform",
+    description: `FinStream is a comprehensive financial dashboard that empowers users to track stock market trends, manage portfolios, and analyze assets in real-time. The application utilizes a scalable microservices architecture to handle high-frequency data updates and complex analytical tasks. Key features include a customizable watchlist with interactive candlestick charts, automated email alerts for price movements, and a premium subscription model with PDF invoice generation.
+
+Key Features:
+• Live Market Dashboard: Real-time streaming of stock prices, indices, and top gainers/losers using WebSockets.
+• Interactive Charting: Advanced technical analysis tools with TradingView Lightweight Charts and Chart.js.
+• AI-Powered Insights: Integrated LangChain4j services for intelligent data processing and market analysis.
+• Portfolio Management: Tools for tracking holdings, calculating performance metrics, and visualizing asset allocation.
+• Secure Authentication: Enterprise-grade security using Keycloak (OIDC) for user identity management.
+• Automated Alerts: Node.js-based notification service for sending timely email alerts via SMTP.`,
+    tech: [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "WebSockets",
+      "Keycloak",
+      "LangChain4j",
+      "Chart.js",
+    ],
     githubUrl: "https://github.com/akashrane/FinStream",
+    visitUrl: "https://fin-stream-nu.vercel.app/",
     videoUrl:
       "https://drive.google.com/file/d/1TQyOq37F1EtofhfGkHPbR9Tbuk7wj1A8/view?usp=drive_link",
   },
