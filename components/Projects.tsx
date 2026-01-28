@@ -143,7 +143,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
     <div className="border border-gray-600 rounded p-4 hover:border-white transition-colors bg-[#1f1f1f]">
       <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
         <h3 className="text-lg font-bold text-white mb-1">{project.name}</h3>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex gap-3 shrink-0">
           {project.visitUrl && (
             <a
               href={project.visitUrl}
