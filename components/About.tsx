@@ -8,7 +8,7 @@ const About = () => {
   return (
     <section id="home" className="pt-40 pb-16 px-4 sm:px-6 lg:px-8 bg-[#1f1f1f]">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl font-semibold text-white mb-8">About</h2>
+        <h2 className="text-2xl font-semibold text-white mb-6">About</h2>
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-10 items-center sm:items-start">
           {/* Left Column: Profile Image */}
           <div className="flex-shrink-0 flex flex-col items-center">
@@ -54,7 +54,7 @@ const About = () => {
                 I am Akash Rane, completing my Master's in Computer Science Degree. My professional focus is the complete data lifecycle, from initial engineering to its application in strategic decision-making.
               </p>
               <p>
-               My experience stems from a strong foundation in back-end development and data engineering. I have expertise in building robust systems to efficiently collect, process, and transmit data using Python, SQL, REST APIs, and real-time protocols like MQTT and OPC-UA.
+                My experience stems from a strong foundation in back-end development and data engineering. I have expertise in building robust systems to efficiently collect, process, and transmit data using Python, SQL, REST APIs, and real-time protocols like MQTT and OPC-UA.
               </p>
               <p>
                 I leverage this engineering foundation to build and deploy predictive models, using machine learning libraries (Scikit-learn, XGBoost, TensorFlow) to uncover actionable insights. I am also proficient in translating complex data into clear narratives via interactive dashboards and visualizations with tools like Grafana, Node-RED, and Power BI.

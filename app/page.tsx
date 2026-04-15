@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import About from "@/components/About";
+import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import Publications from "@/components/Publications";
 import Skills from "@/components/Skills";
@@ -12,6 +13,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#1f1f1f]">
       <Header />
       <About />
+      <Experience />
       <Projects />
       <Skills />
       <Publications />

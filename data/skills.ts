@@ -8,6 +8,19 @@ export const skillTree = {
     "SHAP",
     "Model Tuning & Evaluation",
   ],
+  "Full-Stack & Web": [
+    "React",
+    "Node.js",
+    "TypeScript",
+    "Next.js",
+    "FastAPI",
+    "WebSockets",
+    "Vite",
+    "TailwindCSS",
+    "MongoDB",
+    "Firebase",
+    "WhatsApp-API",
+  ],
   "Programming & Data Processing": [
     "Python (Pandas, NumPy)",
     "SQL (PostgreSQL, MySQL)",
@@ -23,6 +36,7 @@ export const skillTree = {
     "Web Scraping (Selenium)",
     "OPC-UA",
     "REST APIs",
+    "InfluxDB",
   ],
   "Visualization & BI Tools": [
     "Matplotlib",
@@ -30,7 +44,8 @@ export const skillTree = {
     "Power BI",
     "Grafana",
     "Node-RED",
-    "InfluxDB",
+    "Plotly",
+    "NetworkX",
   ],
   "Cloud & DevOps": [
     "AWS EC2",
@@ -59,4 +74,3 @@ export const skillTree = {
     "Agent Workflows & Memory Management",
   ],
 };
-

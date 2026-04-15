@@ -45,15 +45,15 @@ import {
 } from "lucide-react";
 
 const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } =
-  {
-    "Machine Learning": Brain,
-    "Programming & Data Processing": Code,
-    "Data Engineering & APIs": Database,
-    "Visualization & BI Tools": BarChart3,
-    "Cloud & DevOps": Cloud,
-    "Project Management & Collaboration": Kanban,
-    "Agentic AI": Bot,
-  };
+{
+  "Machine Learning": Brain,
+  "Programming & Data Processing": Code,
+  "Data Engineering & APIs": Database,
+  "Visualization & BI Tools": BarChart3,
+  "Cloud & DevOps": Cloud,
+  "Project Management & Collaboration": Kanban,
+  "Agentic AI": Bot,
+};
 
 const subSkillIconMap: {
   [key: string]: React.ComponentType<{ className?: string }>;
@@ -171,8 +171,8 @@ const SkillTree = () => {
       return;
     }
 
-  // desired top (raise panel slightly)
-  const desiredTop = btn.offsetTop - RAISE_PX;
+    // desired top (raise panel slightly)
+    const desiredTop = btn.offsetTop - RAISE_PX;
 
     // boundary check: ensure panel doesn't overflow container vertically
     const containerHeight = containerRef.current.offsetHeight;
@@ -244,19 +244,17 @@ const SkillTree = () => {
                 onClick={() => handleClickCategory(category)}
                 onMouseEnter={() => handleMouseEnterCategory(category)}
                 onMouseLeave={handleMouseLeaveCategory}
-                className={`flex items-center gap-3 px-4 py-3 text-base font-semibold transition-colors duration-200 border-l-2 ${
-                  isPinned
+                className={`flex items-center gap-3 px-4 py-3 text-base font-semibold transition-colors duration-200 border-l-2 ${isPinned
                     ? "bg-white text-[#1f1f1f] border-white"
                     : isPreview
-                    ? "bg-[#f5f5f5] text-[#1f1f1f] border-transparent"
-                    : "text-[#e5e5e5] border-transparent hover:bg-[#f5f5f5] hover:text-[#1f1f1f]"
-                }`}
+                      ? "bg-[#f5f5f5] text-[#1f1f1f] border-transparent"
+                      : "text-[#e5e5e5] border-transparent hover:bg-[#f5f5f5] hover:text-[#1f1f1f]"
+                  }`}
               >
                 {IconComponent && (
                   <IconComponent
-                    className={`w-5 h-5 flex-shrink-0 transition-colors ${
-                      isPinned || isPreview ? "text-[#1f1f1f]" : "text-[#e5e5e5]"
-                    }`}
+                    className={`w-5 h-5 flex-shrink-0 transition-colors ${isPinned || isPreview ? "text-[#1f1f1f]" : "text-[#e5e5e5]"
+                      }`}
                   />
                 )}
                 <span className="whitespace-nowrap">{category}</span>
@@ -268,25 +266,25 @@ const SkillTree = () => {
         {/* Side-floating panel */}
         <AnimatePresence>
           {visibleCategory && (
-              <motion.div
-                ref={panelRef}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -12 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-                className={`absolute z-10 ${isMobile ? 'static w-full' : ''}`}
-                style={{
-                  left: leftColRef.current ? leftColRef.current.offsetWidth + 12 : undefined,
-                  top: typeof panelTop === "number" ? panelTop : undefined,
-                  width: isMobile ? undefined : 420,
-                }}
-                onClick={(e) => e.stopPropagation()}
-                onMouseEnter={() => setHoveredCategory(visibleCategory)}
-                onMouseLeave={() => setHoveredCategory(null)}
+            <motion.div
+              ref={panelRef}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -12 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className={`absolute z-10 ${isMobile ? 'static w-full' : ''}`}
+              style={{
+                left: leftColRef.current ? leftColRef.current.offsetWidth + 12 : undefined,
+                top: typeof panelTop === "number" ? panelTop : undefined,
+                width: isMobile ? undefined : 420,
+              }}
+              onClick={(e) => e.stopPropagation()}
+              onMouseEnter={() => setHoveredCategory(visibleCategory)}
+              onMouseLeave={() => setHoveredCategory(null)}
+            >
+              <div
+                className={`px-6 py-4 ${isMobile ? 'bg-transparent' : 'bg-transparent shadow-lg ring-1 ring-white/5'}`}
               >
-                <div
-                  className={`px-6 py-4 ${isMobile ? 'bg-transparent' : 'bg-transparent shadow-lg ring-1 ring-white/5'}`}
-                >
                 <div className="space-y-2">
                   {skillTree[visibleCategory as keyof typeof skillTree].map(
                     (skill, i) => {
@@ -304,9 +302,8 @@ const SkillTree = () => {
                           onMouseLeave={() => setHoveredSubSkill(null)}
                         >
                           <SubSkillIcon
-                            className={`w-5 h-5 flex-shrink-0 transition-all ${
-                              isHovered ? "text-white scale-110" : "text-gray-500"
-                            }`}
+                            className={`w-5 h-5 flex-shrink-0 transition-all ${isHovered ? "text-white scale-110" : "text-gray-500"
+                              }`}
                           />
                           <span className={`${isHovered ? "text-white" : ""}`}>
                             {skill}

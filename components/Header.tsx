@@ -21,6 +21,12 @@ const Header = () => {
               Home
             </a>
             <a
+              href="#experience"
+              className="text-white opacity-70 hover:opacity-100 hover:underline transition-all"
+            >
+              Experience
+            </a>
+            <a
               href="#projects"
               className="text-white opacity-70 hover:opacity-100 hover:underline transition-all"
             >
