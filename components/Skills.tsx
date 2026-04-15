@@ -6,7 +6,7 @@ import SkillTable from "./SkillTable";
 import { FaTable, FaProjectDiagram } from "react-icons/fa";
 
 const Skills = () => {
-    const [view, setView] = useState<'graph' | 'table'>('graph');
+    const [view, setView] = useState<'graph' | 'table'>('table');
 
     return (
         <section

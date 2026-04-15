@@ -8,12 +8,12 @@ const Experience = () => {
             id="experience"
             className="py-16 px-4 sm:px-6 lg:px-8 bg-[#1f1f1f] border-t border-gray-600"
         >
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
                 <h2 className="text-2xl font-semibold text-white mb-6">
                     Professional Experience
                 </h2>
 
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {experiences.map((exp) => (
                         <div 
                             key={exp.id} 
@@ -24,7 +24,7 @@ const Experience = () => {
                                     <h3 className="text-xl font-bold text-white mb-1">{exp.role}</h3>
                                     <div className="text-gray-400 font-medium" style={{ color: '#f8f8f8ff' }}>{exp.company}</div>
                                 </div>
-                                <span className="text-gray-500 text-xs font-mono bg-gray-900 px-2 py-1 rounded border border-white/5">
+                                <span className="px-2 py-1 text-[10px] text-white border border-gray-600 rounded hover:border-white transition-colors font-mono">
                                     {exp.date}
                                 </span>
                             </div>
