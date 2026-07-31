@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cameco (CCJ) — Equity Research Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<style>
+/* === RESET & BASE === */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:24px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0f1117;color:#c8cad0;line-height:1.6;font-size:14px;min-height:100dvh;overflow-x:hidden;font-feature-settings:'tnum','lnum'}
+
+/* === COLOR TOKENS === */
+:root{
+  --bg:#0f1117;--card:#161822;--surface:#1e2130;--surface-2:#252840;
+  --border:#2a2d42;--border-light:#353858;
+  --text:#e2e4ea;--text-muted:#8b8fa4;--text-faint:#5c6078;
+  --green:#10b981;--green-dim:rgba(16,185,129,0.15);--green-glow:rgba(16,185,129,0.3);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.15);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.15);
+  --amber:#f59e0b;--amber-dim:rgba(245,158,11,0.15);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,0.15);
+  --cyan:#06b6d4;
+  --sidebar-w:240px;
+  --radius:8px;--radius-lg:12px;
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-light)}
+
+/* === LAYOUT === */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--card);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:transform 0.3s ease}
+.sidebar-header{padding:20px 16px;border-bottom:1px solid var(--border)}
+.sidebar-logo{display:flex;align-items:center;gap:10px}
+.sidebar-logo svg{flex-shrink:0}
+.sidebar-logo span{font-weight:700;font-size:15px;color:var(--text);letter-spacing:-0.02em}
+.sidebar-logo .ticker{font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:0.05em}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 0}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--text-muted);text-decoration:none;font-size:13px;font-weight:500;transition:all 0.2s;border-left:2px solid transparent}
+.sidebar-nav a:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+.sidebar-nav a.active{color:var(--green);border-left-color:var(--green);background:var(--green-dim)}
+.sidebar-nav .nav-num{font-size:10px;color:var(--text-faint);font-weight:600;min-width:16px}
+
+.main{margin-left:var(--sidebar-w);padding:0 32px 80px}
+.section{padding:48px 0;max-width:1200px;margin:0 auto}
+
+/* === HAMBURGER === */
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px;cursor:pointer;color:var(--text)}
+.hamburger svg{display:block}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:90}
+
+/* === TYPOGRAPHY === */
+h1{font-size:clamp(1.5rem,1.2rem+1.5vw,2rem);font-weight:800;color:var(--text);letter-spacing:-0.03em;line-height:1.15}
+h2{font-size:clamp(1.1rem,1rem+0.5vw,1.35rem);font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px}
+h3{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.01em;margin-bottom:12px}
+.section-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px}
+
+/* === CARDS === */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;transition:border-color 0.2s}
+.card:hover{border-color:var(--border-light)}
+
+/* === KPI ROW === */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:20px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;transition:border-color 0.2s,transform 0.2s}
+.kpi:hover{border-color:var(--border-light);transform:translateY(-1px)}
+.kpi-label{font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.kpi-value{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.02em}
+.kpi-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+/* === BADGE === */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius);font-size:12px;font-weight:600}
+.badge-buy{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.25)}
+.badge-price{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(59,130,246,0.25)}
+.badge-target{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.25)}
+.badge-upside{background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.2)}
+
+/* === EXECUTIVE HEADER === */
+.exec-header{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:12px 0 8px}
+.exec-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.exec-sub{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+/* === TABLES === */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table thead th{padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-faint);border-bottom:1px solid var(--border);background:var(--surface)}
+.data-table tbody td{padding:10px 14px;border-bottom:1px solid rgba(42,45,66,0.5);color:var(--text-muted)}
+.data-table tbody tr:hover{background:rgba(255,255,255,0.02)}
+.data-table .num{text-align:right;font-variant-numeric:tabular-nums}
+.table-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border)}
+
+/* === VARIANT TABLE === */
+.variant-table{width:100%;border-collapse:collapse}
+.variant-table th{padding:14px 18px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;background:var(--surface);border-bottom:1px solid var(--border)}
+.variant-table th:first-child{color:var(--text-muted)}
+.variant-table th:last-child{color:var(--green)}
+.variant-table td{padding:16px 18px;border-bottom:1px solid rgba(42,45,66,0.4);font-size:13px;line-height:1.6;vertical-align:top}
+.variant-table td:first-child{color:var(--text-muted);max-width:340px}
+.variant-table td:last-child{color:var(--text);max-width:440px}
+.variant-table td .arrow{color:var(--green);margin-right:4px;font-weight:700}
+
+/* === PILLAR CARDS === */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
+.pillar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;transition:all 0.3s}
+.pillar:hover{border-color:var(--border-light);transform:translateY(-2px)}
+.pillar-icon{font-size:28px;margin-bottom:12px}
+.pillar h3{font-size:16px;margin-bottom:12px;color:var(--text)}
+.pillar ul{list-style:none;padding:0}
+.pillar li{padding:5px 0;font-size:13px;color:var(--text-muted);line-height:1.5;position:relative;padding-left:16px}
+.pillar li::before{content:'';position:absolute;left:0;top:12px;width:6px;height:6px;border-radius:50%}
+.pillar:nth-child(1) li::before{background:var(--blue)}
+.pillar:nth-child(2) li::before{background:var(--green)}
+.pillar:nth-child(3) li::before{background:var(--amber)}
+
+/* === CHART CONTAINERS === */
+.chart-container{position:relative;height:360px;margin:16px 0}
+.chart-container-sm{height:280px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+
+/* === COLLAPSIBLE === */
+.collapsible-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:6px 0;user-select:none}
+.collapsible-header h2{margin-bottom:0}
+.collapse-icon{transition:transform 0.3s;color:var(--text-faint)}
+.collapsible-header[aria-expanded="false"] .collapse-icon{transform:rotate(-90deg)}
+.collapsible-body{overflow:hidden;transition:max-height 0.4s ease,opacity 0.3s ease}
+.collapsible-body.collapsed{max-height:0!important;opacity:0;pointer-events:none}
+
+/* === SCENARIO SLIDER === */
+.slider-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-top:20px}
+.slider-row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;margin-bottom:16px}
+.slider-group{flex:1;min-width:200px}
+.slider-group label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
+.slider-group input[type="range"]{-webkit-appearance:none;width:100%;height:6px;background:var(--border);border-radius:3px;outline:none;cursor:pointer}
+.slider-group input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--green);cursor:pointer;border:2px solid var(--bg)}
+.slider-val{font-size:18px;font-weight:700;color:var(--text);margin-top:4px}
+.slider-result{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;margin-top:8px}
+.slider-result .big-num{font-size:36px;font-weight:800;letter-spacing:-0.03em}
+.slider-result .label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px}
+
+/* === SOTP DONUT === */
+.sotp-visual{display:flex;flex-wrap:wrap;gap:24px;align-items:center;margin-top:16px}
+.donut-wrap{width:260px;height:260px;flex-shrink:0}
+.donut-legend{flex:1;min-width:240px}
+.donut-legend-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px}
+.donut-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* === RISK MATRIX === */
+.risk-chart{position:relative;height:400px}
+
+/* === TIMELINE === */
+.timeline{position:relative;padding-left:32px;margin-top:16px}
+.timeline::before{content:'';position:absolute;left:11px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.timeline-item{position:relative;padding:12px 0 24px;opacity:0;transform:translateY(20px);transition:all 0.5s ease}
+.timeline-item.visible{opacity:1;transform:translateY(0)}
+.timeline-dot{position:absolute;left:-27px;top:16px;width:14px;height:14px;border-radius:50%;border:2px solid var(--bg)}
+.timeline-dot.high{background:var(--green)}
+.timeline-dot.medium{background:var(--amber)}
+.timeline-dot.certain{background:var(--blue)}
+.timeline-date{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
+.timeline-desc{font-size:13px;color:var(--text-muted);line-height:1.5}
+.timeline-prob{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--radius);margin-top:6px}
+.timeline-prob.high{background:var(--green-dim);color:var(--green)}
+.timeline-prob.medium{background:var(--amber-dim);color:var(--amber)}
+.timeline-prob.certain{background:var(--blue-dim);color:var(--blue)}
+
+/* === FOOTBALL FIELD === */
+.football-field{margin-top:16px}
+.ff-row{display:flex;align-items:center;gap:12px;padding:8px 0;font-size:13px}
+.ff-label{width:120px;color:var(--text-muted);font-weight:500;flex-shrink:0;text-align:right}
+.ff-bar-wrap{flex:1;position:relative;height:24px;background:var(--surface);border-radius:4px;overflow:visible}
+.ff-bar{position:absolute;height:100%;border-radius:4px;transition:width 0.8s ease,left 0.8s ease}
+.ff-point{position:absolute;height:100%;width:3px;border-radius:2px;top:0}
+.ff-val{font-size:11px;font-weight:600;color:var(--text)}
+.ff-current-line{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--amber);z-index:5}
+.ff-current-label{position:absolute;top:-20px;font-size:10px;color:var(--amber);font-weight:600;white-space:nowrap;transform:translateX(-50%)}
+
+/* === SCENARIO TABLE === */
+.scenario-row{display:grid;grid-template-columns:100px 1fr 80px 100px 90px 80px 60px 70px;align-items:center;padding:10px 14px;font-size:12px;border-bottom:1px solid rgba(42,45,66,0.4)}
+.scenario-row.header{font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.05em;font-size:10px;background:var(--surface)}
+.scenario-row .name{font-weight:600;color:var(--text)}
+.scenario-row .green{color:var(--green)}
+.scenario-row .red{color:var(--red)}
+.scenario-row .amber{color:var(--amber)}
+
+/* === FOOTER === */
+.footer{text-align:center;padding:40px 32px;border-top:1px solid var(--border);margin-left:var(--sidebar-w);font-size:12px;color:var(--text-faint)}
+.footer p+p{margin-top:4px}
+
+/* === ANIMATIONS === */
+.fade-in{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* === RESPONSIVE === */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .hamburger{display:block}
+  .overlay.active{display:block}
+  .main{margin-left:0;padding:0 16px 60px}
+  .footer{margin-left:0}
+  .chart-row{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+  .scenario-row{grid-template-columns:80px 1fr 60px 80px 70px 60px 50px 60px;font-size:11px}
+  .pillars{grid-template-columns:1fr}
+  .sotp-visual{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:600px){
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .slider-row{flex-direction:column}
+  .scenario-row{display:flex;flex-wrap:wrap;gap:4px}
+  .ff-label{width:80px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#10b981" fill-opacity="0.15"/>
+        <path d="M16 6L8 12v8l8 6 8-6v-8L16 6z" stroke="#10b981" stroke-width="1.5" fill="none"/>
+        <circle cx="16" cy="16" r="4" fill="#10b981" fill-opacity="0.4"/>
+        <circle cx="16" cy="16" r="2" fill="#10b981"/>
+      </svg>
+      <div>
+        <span>CAMECO</span>
+        <div class="ticker">NYSE: CCJ</div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-nav">
+    <a href="#executive" class="active"><span class="nav-num">01</span>Executive Dashboard</a>
+    <a href="#variant"><span class="nav-num">02</span>Variant Perception</a>
+    <a href="#thesis"><span class="nav-num">03</span>Investment Thesis</a>
+    <a href="#supply-demand"><span class="nav-num">04</span>Supply-Demand</a>
+    <a href="#repricing"><span class="nav-num">05</span>Contract Repricing</a>
+    <a href="#financials"><span class="nav-num">06</span>Financial Model</a>
+    <a href="#scenarios"><span class="nav-num">07</span>Scenario Analysis</a>
+    <a href="#valuation"><span class="nav-num">08</span>Valuation</a>
+    <a href="#risks"><span class="nav-num">09</span>Risk Matrix</a>
+    <a href="#catalysts"><span class="nav-num">10</span>Catalysts</a>
+  </div>
+  <div style="padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-faint)">
+    April 2026 &middot; CONFIDENTIAL
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ============== SECTION 1: EXECUTIVE ============== -->
+<section class="section" id="executive">
+  <div class="fade-in">
+    <div class="section-label">Equity Research</div>
+    <h1>CAMECO (CCJ) — Equity Research</h1>
+    <p class="exec-sub">TSX: CCO &nbsp;|&nbsp; NYSE: CCJ &nbsp;|&nbsp; Sector: Energy — Uranium &nbsp;|&nbsp; April 2026</p>
+    <div class="exec-badges">
+      <span class="badge badge-buy">&#9650; BUY</span>
+      <span class="badge badge-target">Target: US$140</span>
+      <span class="badge badge-price">Current: US$115.90</span>
+      <span class="badge badge-upside">Upside: +21%</span>
+    </div>
+  </div>
+  <div class="kpi-grid fade-in">
+    <div class="kpi">
+      <div class="kpi-label">Market Cap</div>
+      <div class="kpi-value">$50.5B</div>
+      <div class="kpi-sub">USD</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Enterprise Value</div>
+      <div class="kpi-value">$50.3B</div>
+      <div class="kpi-sub">USD (CAD $69.9B)</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">FY2025A Revenue</div>
+      <div class="kpi-value">$3,482M</div>
+      <div class="kpi-sub">CAD</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">FY2025A Adj EBITDA</div>
+      <div class="kpi-value">$1,929M</div>
+      <div class="kpi-sub">CAD</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">EBITDA Margin</div>
+      <div class="kpi-value">55.4%</div>
+      <div class="kpi-sub">FY2025A</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Div Yield</div>
+      <div class="kpi-value">0.21%</div>
+      <div class="kpi-sub">Annual</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">52-Wk Range</div>
+      <div class="kpi-value" style="font-size:16px">$36.01–$135.24</div>
+      <div class="kpi-sub">USD</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">FCF (FY2025A)</div>
+      <div class="kpi-value">$850M</div>
+      <div class="kpi-sub">CAD</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 2: VARIANT PERCEPTION ============== -->
+<section class="section" id="variant">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 02</div><h2>Variant Perception</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <div class="table-wrap">
+        <table class="variant-table">
+          <thead><tr><th>Consensus View</th><th>Our Variant View</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>"Uranium is cyclical"</td>
+              <td><span class="arrow">&#9654;</span> Supply response structurally impaired: 7–10 yr mine timelines, ISR incremental, secondary depleting. Regime change, not cycle.</td>
+            </tr>
+            <tr>
+              <td>"Premium fully prices renaissance"</td>
+              <td><span class="arrow">&#9654;</span> Market underestimates repricing torque: ~230M lbs resetting from $40–50 to $80–120/lb. 3–5 yrs of margin expansion ahead.</td>
+            </tr>
+            <tr>
+              <td>"Westinghouse is diversification"</td>
+              <td><span class="arrow">&#9654;</span> Westinghouse is growth optionality: AP300 SMR, Dukovany-style royalties, VVER fuel replacement = 6–10% EBITDA CAGR.</td>
+            </tr>
+            <tr>
+              <td>"Current price implies modest growth"</td>
+              <td><span class="arrow">&#9654;</span> Reverse-DCF: $115.90 implies ~12% EBITDA CAGR. We model 18% from repricing alone — before hyperscaler optionality.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 3: INVESTMENT THESIS ============== -->
+<section class="section" id="thesis">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 03</div><h2>Investment Thesis — Three Pillars</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon">&#9935;</div>
+          <h3>Structural Supply Deficit</h3>
+          <ul>
+            <li>Demand 2025E: ~179M lbs &rarr; 2030E: ~229M lbs &rarr; 2035E: ~300M lbs</li>
+            <li>Supply 2025E: ~167M lbs (persistent deficit)</li>
+            <li>438 operating reactors, 79 under construction</li>
+            <li>New mines need 7–10 years and $70–90+/lb incentive pricing</li>
+          </ul>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">&#128200;</div>
+          <h3>Contract Repricing Runway</h3>
+          <ul>
+            <li>~230M lbs under long-term contracts</li>
+            <li>Legacy contracts at $40–50/lb rolling to $80–120/lb</li>
+            <li>FY2025A realized: US$57/lb &rarr; FY2030E target: ~$112/lb</li>
+            <li>3–5 year visible margin expansion runway</li>
+          </ul>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">&#9889;</div>
+          <h3>Westinghouse Services Revenue</h3>
+          <ul>
+            <li>49% stake, services ~50% of global reactor fleet</li>
+            <li>High-margin recurring revenue</li>
+            <li>AP300 SMR, VVER fuel replacement, Dukovany contracts</li>
+            <li>BWXT comparable trades at 39x EV/EBITDA</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 4: SUPPLY-DEMAND ============== -->
+<section class="section" id="supply-demand">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 04</div><h2>Uranium Supply-Demand Balance (M lbs U&#8323;O&#8328;)</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <div class="card">
+        <div class="chart-container" id="supplyDemandChartWrap">
+          <canvas id="supplyDemandChart"></canvas>
+        </div>
+      </div>
+      <h3 style="margin-top:24px">Demand Drivers</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Driver</th><th>Current</th><th>2030E</th><th class="num">Incremental Demand</th></tr></thead>
+          <tbody>
+            <tr><td>Operating Reactors</td><td>438 (396 GWe)</td><td>~460</td><td class="num">+10–15M lbs/yr</td></tr>
+            <tr><td>Under Construction</td><td>79 (82 GWe)</td><td>Commissioning</td><td class="num">+25–30M lbs/yr</td></tr>
+            <tr><td>Life Extensions</td><td>~80 approved/pending</td><td>Ongoing</td><td class="num">+5–10M lbs/yr</td></tr>
+            <tr><td>SMRs</td><td>Demonstration</td><td>First units</td><td class="num">+2–5M lbs/yr</td></tr>
+            <tr><td>Hyperscaler PPAs</td><td>~13.9 GW committed</td><td>Staged ramp</td><td class="num">+6–10M lbs/yr</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 5: CONTRACT REPRICING ============== -->
+<section class="section" id="repricing">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 05</div><h2>Contract Repricing Waterfall: Blended Realized Price (US$/lb)</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <div class="card">
+        <div class="chart-container" id="repricingChartWrap">
+          <canvas id="repricingChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 6: FINANCIAL MODEL ============== -->
+<section class="section" id="financials">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 06</div><h2>Financial Model</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <h3>Financial Overview</h3>
+      <div class="table-wrap" style="margin-bottom:24px">
+        <table class="data-table">
+          <thead><tr><th>Metric</th><th class="num">FY2023A</th><th class="num">FY2024A</th><th class="num">FY2025A</th><th class="num">FY2026E</th><th class="num">FY2027E</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue (CAD $M)</td><td class="num">2,588</td><td class="num">2,920</td><td class="num">3,482</td><td class="num">3,234</td><td class="num">4,093</td></tr>
+            <tr><td>Adj EBITDA (CAD $M)</td><td class="num">1,012</td><td class="num">1,350</td><td class="num">1,929</td><td class="num">1,429</td><td class="num">1,794</td></tr>
+            <tr><td>EBITDA Margin</td><td class="num">39.1%</td><td class="num">46.2%</td><td class="num">55.4%</td><td class="num">44.2%</td><td class="num">43.8%</td></tr>
+            <tr><td>Net Income (CAD $M)</td><td class="num">378</td><td class="num">580</td><td class="num">920</td><td class="num">640</td><td class="num">850</td></tr>
+            <tr><td>Diluted EPS (CAD)</td><td class="num">$0.87</td><td class="num">$1.33</td><td class="num">$2.11</td><td class="num">$1.47</td><td class="num">$1.95</td></tr>
+            <tr><td>CapEx (CAD $M)</td><td class="num">420</td><td class="num">480</td><td class="num">510</td><td class="num">530</td><td class="num">560</td></tr>
+            <tr><td>FCF (CAD $M)</td><td class="num">320</td><td class="num">540</td><td class="num">850</td><td class="num">850</td><td class="num">1,050</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="chart-row">
+        <div class="card">
+          <h3>Adj EBITDA (CAD $M)</h3>
+          <div class="chart-container chart-container-sm" id="ebitdaBarWrap">
+            <canvas id="ebitdaBarChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Segment EBITDA Breakdown (CAD $M)</h3>
+          <div class="chart-container chart-container-sm" id="segmentBarWrap">
+            <canvas id="segmentBarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>EBITDA Bridge: FY2025A &rarr; FY2027E (CAD $M)</h3>
+        <div class="chart-container" id="bridgeChartWrap">
+          <canvas id="bridgeChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 7: SCENARIO ANALYSIS ============== -->
+<section class="section" id="scenarios">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 07</div><h2>Scenario Analysis</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <div class="table-wrap" style="margin-bottom:24px">
+        <table class="data-table">
+          <thead>
+            <tr><th>Scenario</th><th>Key Assumptions</th><th class="num">EV/EBITDA</th><th class="num">EBITDA</th><th class="num">Target US$</th><th class="num">vs Current</th><th class="num">Prob</th><th class="num">Wtd $</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--red);font-weight:600">Deep Bear</td>
+              <td>U&#8323;O&#8328; $60/lb; surplus</td><td class="num">20x</td><td class="num">FY26E $1,429M</td><td class="num" style="color:var(--red)">$47</td><td class="num" style="color:var(--red)">-59%</td><td class="num">5%</td><td class="num">$2.35</td>
+            </tr>
+            <tr>
+              <td style="color:var(--amber);font-weight:600">Bear</td>
+              <td>U&#8323;O&#8328; $70/lb; repricing slows</td><td class="num">30x</td><td class="num">FY26E $1,429M</td><td class="num" style="color:var(--amber)">$71</td><td class="num" style="color:var(--red)">-39%</td><td class="num">15%</td><td class="num">$10.65</td>
+            </tr>
+            <tr>
+              <td style="color:var(--blue);font-weight:600">Base</td>
+              <td>U&#8323;O&#8328; $90–100/lb; repricing continues</td><td class="num">42x</td><td class="num">FY27E $1,794M</td><td class="num" style="color:var(--green)">$140</td><td class="num" style="color:var(--green)">+21%</td><td class="num">50%</td><td class="num">$70.00</td>
+            </tr>
+            <tr>
+              <td style="color:var(--green);font-weight:600">Base+</td>
+              <td>U&#8323;O&#8328; $110/lb; accelerated</td><td class="num">45x</td><td class="num">FY27E $1,900M</td><td class="num" style="color:var(--green)">$160</td><td class="num" style="color:var(--green)">+38%</td><td class="num">20%</td><td class="num">$32.00</td>
+            </tr>
+            <tr>
+              <td style="color:var(--green);font-weight:600">Bull</td>
+              <td>U&#8323;O&#8328; $130+/lb; hyperscaler accel</td><td class="num">48x</td><td class="num">FY27E $2,050M</td><td class="num" style="color:var(--green)">$194</td><td class="num" style="color:var(--green)">+67%</td><td class="num">10%</td><td class="num">$19.40</td>
+            </tr>
+            <tr style="background:rgba(16,185,129,0.05);font-weight:600">
+              <td style="color:var(--green)">Expected Value</td><td></td><td></td><td></td><td class="num" style="color:var(--green);font-size:15px">$134.40</td><td class="num" style="color:var(--green)">+16%</td><td class="num">100%</td><td class="num" style="color:var(--green)">$134.40</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-bottom:24px">
+        <h3>Scenario Price Targets vs Current (US$115.90)</h3>
+        <div class="chart-container chart-container-sm" id="scenarioBarWrap">
+          <canvas id="scenarioBarChart"></canvas>
+        </div>
+      </div>
+
+      <div class="slider-panel">
+        <h3>Interactive Scenario Builder</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px">Adjust uranium price and EV/EBITDA multiple to see implied stock price</p>
+        <div class="slider-row">
+          <div class="slider-group">
+            <label>Uranium Price (US$/lb)</label>
+            <input type="range" id="uraniumSlider" min="50" max="150" value="95" step="1" oninput="updateScenario()">
+            <div class="slider-val" id="uraniumVal">$95/lb</div>
+          </div>
+          <div class="slider-group">
+            <label>EV/EBITDA Multiple</label>
+            <input type="range" id="multipleSlider" min="15" max="50" value="42" step="0.5" oninput="updateScenario()">
+            <div class="slider-val" id="multipleVal">42.0x</div>
+          </div>
+        </div>
+        <div class="slider-result">
+          <div class="big-num" id="impliedPrice" style="color:var(--green)">$140</div>
+          <div class="label">Implied Stock Price (US$)</div>
+          <div id="impliedUpside" style="font-size:13px;margin-top:6px;color:var(--green)">+20.8% upside</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 8: VALUATION ============== -->
+<section class="section" id="valuation">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 08</div><h2>Valuation</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <h3>Enhanced Sum-of-the-Parts (SOTP)</h3>
+      <div class="table-wrap" style="margin-bottom:24px">
+        <table class="data-table">
+          <thead><tr><th>Component</th><th>Metric</th><th>Multiple/Method</th><th class="num">EV (CAD $M)</th><th class="num">USD equiv ($M)</th></tr></thead>
+          <tbody>
+            <tr><td>Uranium Mining EBITDA</td><td>FY2027E $975M</td><td>20x</td><td class="num">19,500</td><td class="num">14,040</td></tr>
+            <tr><td>Reserve NAV</td><td>360M lbs × $20/lb</td><td>In-ground</td><td class="num">7,200</td><td class="num">5,184</td></tr>
+            <tr><td>Fuel Services EBITDA</td><td>FY2027E $215M</td><td>14x</td><td class="num">3,010</td><td class="num">2,167</td></tr>
+            <tr><td>Westinghouse (49%)</td><td>FY2027E $611M</td><td>20x (BWXT: 39x)</td><td class="num">12,220</td><td class="num">8,798</td></tr>
+            <tr><td>Contract Repricing NPV</td><td>Incremental CFs</td><td>10% disc, 5.7x cap</td><td class="num">8,500</td><td class="num">6,120</td></tr>
+            <tr><td>Corporate overhead</td><td>—</td><td>—</td><td class="num" style="color:var(--red)">(2,000)</td><td class="num" style="color:var(--red)">(1,440)</td></tr>
+            <tr style="font-weight:700;border-top:2px solid var(--border)">
+              <td>TOTAL EV</td><td></td><td></td><td class="num">48,430</td><td class="num">34,870</td></tr>
+            <tr><td>+ Net Cash</td><td></td><td></td><td class="num">192</td><td class="num">138</td></tr>
+            <tr style="font-weight:700;background:rgba(16,185,129,0.04)">
+              <td>Equity Value</td><td></td><td></td><td class="num">48,622</td><td class="num">35,008</td></tr>
+            <tr style="font-weight:700;background:rgba(16,185,129,0.08)">
+              <td style="color:var(--green)">Per Share (435.6M)</td><td></td><td></td><td class="num" style="color:var(--green)">CAD $111.64</td><td class="num" style="color:var(--green)">US$80.38</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sotp-visual">
+        <div class="donut-wrap">
+          <canvas id="sotpDonut"></canvas>
+        </div>
+        <div class="donut-legend" id="sotpLegend"></div>
+      </div>
+
+      <h3 style="margin-top:32px">EV/EBITDA Peer Comparison</h3>
+      <div class="card">
+        <div class="chart-container chart-container-sm" id="peerChartWrap">
+          <canvas id="peerChart"></canvas>
+        </div>
+      </div>
+
+      <h3 style="margin-top:32px">Valuation Summary</h3>
+      <div class="table-wrap" style="margin-bottom:24px">
+        <table class="data-table">
+          <thead><tr><th>Method</th><th class="num">Implied Value (US$)</th><th class="num">Range</th></tr></thead>
+          <tbody>
+            <tr><td>Enhanced SOTP</td><td class="num">$80</td><td class="num">$65–90</td></tr>
+            <tr><td>Multi-Stage DCF</td><td class="num">$47</td><td class="num">$38–58</td></tr>
+            <tr><td>Reverse-DCF</td><td class="num">$116 (market)</td><td class="num">—</td></tr>
+            <tr><td>EV/EBITDA (Base)</td><td class="num" style="color:var(--green);font-weight:600">$140</td><td class="num">$119–160</td></tr>
+            <tr><td>Prob-Weighted</td><td class="num" style="color:var(--green);font-weight:600">$134</td><td class="num">$47–194</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Valuation Range ("Football Field")</h3>
+      <div class="card" id="footballFieldCard">
+        <div id="footballField" class="football-field"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 9: RISK MATRIX ============== -->
+<section class="section" id="risks">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 09</div><h2>Risk Matrix</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <div class="card">
+        <div class="risk-chart" id="riskMatrixWrap">
+          <canvas id="riskMatrix"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 10: CATALYSTS ============== -->
+<section class="section" id="catalysts">
+  <div class="fade-in">
+    <div class="collapsible-header" aria-expanded="true" onclick="toggleCollapse(this)">
+      <div><div class="section-label">Section 10</div><h2>Catalyst Timeline</h2></div>
+      <svg class="collapse-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="collapsible-body">
+      <div class="timeline" id="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot certain"></div>
+          <div class="timeline-date">Apr 2026</div>
+          <div class="timeline-desc">Q1 2026 Earnings — Confirms FY2026 trajectory</div>
+          <span class="timeline-prob certain">Certain</span>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot high"></div>
+          <div class="timeline-date">Summer 2026</div>
+          <div class="timeline-desc">Arrow construction begins — De-risks supply narrative</div>
+          <span class="timeline-prob high">90% High</span>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot high"></div>
+          <div class="timeline-date">2026–2027</div>
+          <div class="timeline-desc">DOE reserve purchases — Supports spot price floor</div>
+          <span class="timeline-prob high">80% High</span>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot medium"></div>
+          <div class="timeline-date">2027–2028</div>
+          <div class="timeline-desc">AP300 NRC certification — Unlocks SMR market</div>
+          <span class="timeline-prob medium">50% Medium</span>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot medium"></div>
+          <div class="timeline-date">2028</div>
+          <div class="timeline-desc">TMI Unit 1 restart — Validates restart economics</div>
+          <span class="timeline-prob medium">60% Medium</span>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot high"></div>
+          <div class="timeline-date">2028–2030</div>
+          <div class="timeline-desc">Legacy repricing peak — 18% EBITDA CAGR</div>
+          <span class="timeline-prob high">85% High</span>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot medium"></div>
+          <div class="timeline-date">~2030</div>
+          <div class="timeline-desc">Arrow first production — 20% supply addition</div>
+          <span class="timeline-prob medium">55% Medium</span>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot medium"></div>
+          <div class="timeline-date">2030–2035</div>
+          <div class="timeline-desc">Hyperscaler fleet operational — 5–8% demand increment</div>
+          <span class="timeline-prob medium">45% Medium</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- end main -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Prepared by Perplexity Computer &nbsp;|&nbsp; April 2026 &nbsp;|&nbsp; CONFIDENTIAL</p>
+  <p>This document is for informational purposes only and does not constitute investment advice.</p>
+</footer>
+
+<script>
+// ========================================
+// SIDEBAR TOGGLE
+// ========================================
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('active');
+}
+
+// ========================================
+// COLLAPSIBLE SECTIONS
+// ========================================
+function toggleCollapse(header){
+  const body = header.nextElementSibling;
+  const expanded = header.getAttribute('aria-expanded') === 'true';
+  header.setAttribute('aria-expanded', !expanded);
+  if(expanded){
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(()=>{body.classList.add('collapsed');body.style.maxHeight='0px'});
+  } else {
+    body.classList.remove('collapsed');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    setTimeout(()=>{body.style.maxHeight='none'},400);
+  }
+}
+
+// ========================================
+// ACTIVE NAV HIGHLIGHTING
+// ========================================
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.sidebar-nav a');
+const observerNav = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const link = document.querySelector(`.sidebar-nav a[href="#${e.target.id}"]`);
+      if(link) link.classList.add('active');
+    }
+  });
+},{threshold:0.15,rootMargin:'-80px 0px -60% 0px'});
+sections.forEach(s=>observerNav.observe(s));
+
+// Close sidebar on nav click (mobile)
+navLinks.forEach(l=>l.addEventListener('click',()=>{
+  if(window.innerWidth<=900){toggleSidebar()}
+}));
+
+// ========================================
+// FADE-IN ON SCROLL
+// ========================================
+const fadeEls = document.querySelectorAll('.fade-in');
+const fadeObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');fadeObs.unobserve(e.target)}});
+},{threshold:0.1});
+fadeEls.forEach(el=>fadeObs.observe(el));
+
+// ========================================
+// TIMELINE ANIMATION
+// ========================================
+const tlItems = document.querySelectorAll('.timeline-item');
+const tlObs = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{e.target.classList.add('visible')},i*80);
+      tlObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+tlItems.forEach(el=>tlObs.observe(el));
+
+// ========================================
+// CHART.JS DEFAULTS
+// ========================================
+Chart.defaults.color = '#8b8fa4';
+Chart.defaults.borderColor = 'rgba(42,45,66,0.6)';
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyleWidth = 8;
+Chart.defaults.plugins.tooltip.backgroundColor = '#1e2130';
+Chart.defaults.plugins.tooltip.borderColor = '#353858';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.titleFont = {weight:'600',size:13};
+Chart.defaults.plugins.tooltip.bodyFont = {size:12};
+Chart.defaults.plugins.tooltip.padding = 12;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.displayColors = true;
+Chart.defaults.elements.point.radius = 4;
+Chart.defaults.elements.point.hoverRadius = 6;
+
+// ========================================
+// CHART ANIMATION ON SCROLL
+// ========================================
+const chartInstances = {};
+const chartConfigs = {};
+
+function createChartOnVisible(canvasId, configFn){
+  chartConfigs[canvasId] = configFn;
+  const wrap = document.getElementById(canvasId + 'Wrap') || document.getElementById(canvasId).parentElement;
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && !chartInstances[canvasId]){
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        chartInstances[canvasId] = new Chart(ctx, configFn());
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.15});
+  obs.observe(wrap);
+}
+
+// ========================================
+// 1. SUPPLY-DEMAND CHART
+// ========================================
+createChartOnVisible('supplyDemandChart', ()=>({
+  type:'line',
+  data:{
+    labels:['2020','2022','2024','2025E','2027E','2030E','2035E'],
+    datasets:[
+      {
+        label:'Supply',
+        data:[124,128,157,167,175,195,210],
+        borderColor:'#3b82f6',
+        backgroundColor:'rgba(59,130,246,0.08)',
+        borderWidth:2.5,
+        tension:0.35,
+        fill:false,
+        pointBackgroundColor:'#3b82f6',
+        pointBorderColor:'#0f1117',
+        pointBorderWidth:2,
+      },
+      {
+        label:'Demand',
+        data:[169,166,174,179,195,229,300],
+        borderColor:'#f59e0b',
+        backgroundColor:'rgba(245,158,11,0.08)',
+        borderWidth:2.5,
+        tension:0.35,
+        fill:false,
+        pointBackgroundColor:'#f59e0b',
+        pointBorderColor:'#0f1117',
+        pointBorderWidth:2,
+      },
+      {
+        label:'Deficit Area',
+        data:[169,166,174,179,195,229,300],
+        borderColor:'transparent',
+        backgroundColor:'rgba(239,68,68,0.08)',
+        borderWidth:0,
+        tension:0.35,
+        fill:'-1',
+        pointRadius:0,
+        pointHoverRadius:0,
+      }
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{position:'top',labels:{padding:16}},
+      tooltip:{
+        callbacks:{
+          label:function(c){return c.dataset.label==='Deficit Area'?null:c.dataset.label+': '+c.parsed.y+'M lbs'}
+        }
+      },
+      annotation:{
+        annotations:{
+          deficitLabel:{
+            type:'label',
+            xValue:'2030E',
+            yValue:212,
+            content:['Structural','Deficit'],
+            color:'#ef4444',
+            font:{size:12,weight:'700',family:'Inter'},
+            backgroundColor:'rgba(239,68,68,0.1)',
+            borderRadius:4,
+            padding:6,
+          }
+        }
+      }
+    },
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:11}}},
+      y:{
+        beginAtZero:false,
+        min:100,
+        max:320,
+        grid:{color:'rgba(42,45,66,0.4)'},
+        ticks:{callback:v=>v+'M',font:{size:11}}
+      }
+    },
+    animation:{duration:1200,easing:'easeOutQuart'}
+  }
+}));
+
+// ========================================
+// 2. CONTRACT REPRICING CHART
+// ========================================
+createChartOnVisible('repricingChart', ()=>({
+  type:'bar',
+  data:{
+    labels:['FY2024A','FY2025A','FY2026E','FY2027E','FY2028E','FY2029E','FY2030E'],
+    datasets:[
+      {
+        label:'Realized Price (US$/lb)',
+        data:[48,57,68,82,95,105,112],
+        backgroundColor:['#3b82f6','#3b82f6','#10b981','#10b981','#10b981','#10b981','#10b981'],
+        borderColor:['#5b9bf6','#5b9bf6','#34d399','#34d399','#34d399','#34d399','#34d399'],
+        borderWidth:1,
+        borderRadius:4,
+        barPercentage:0.65,
+      }
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          afterLabel:function(c){
+            const legacy=['85%','70%','55%','38%','22%','10%','~0%'];
+            return 'Legacy remaining: '+legacy[c.dataIndex];
+          }
+        }
+      }
+    },
+    scales:{
+      x:{grid:{display:false}},
+      y:{
+        beginAtZero:true,
+        max:130,
+        grid:{color:'rgba(42,45,66,0.4)'},
+        ticks:{callback:v=>'$'+v}
+      }
+    },
+    animation:{duration:1000,easing:'easeOutQuart'}
+  },
+  plugins:[{
+    id:'repricingLabels',
+    afterDatasetsDraw(chart){
+      const meta = chart.getDatasetMeta(0);
+      const ctx = chart.ctx;
+      const legacy = ['85%','70%','55%','38%','22%','10%','~0%'];
+      const prices = [48,57,68,82,95,105,112];
+      meta.data.forEach((bar,i)=>{
+        ctx.save();
+        ctx.fillStyle='#e2e4ea';
+        ctx.font='bold 11px Inter,sans-serif';
+        ctx.textAlign='center';
+        ctx.fillText('$'+prices[i],bar.x,bar.y-8);
+        ctx.fillStyle='#8b8fa4';
+        ctx.font='10px Inter,sans-serif';
+        ctx.fillText(legacy[i],bar.x,bar.y + bar.height/2 + 4 > chart.chartArea.bottom - 16 ? bar.y + 16 : bar.y + bar.height/2 + 4);
+        ctx.restore();
+      });
+    }
+  }]
+}));
+
+// ========================================
+// 3. EBITDA BAR CHART
+// ========================================
+createChartOnVisible('ebitdaBarChart', ()=>({
+  type:'bar',
+  data:{
+    labels:['FY2023A','FY2024A','FY2025A','FY2026E','FY2027E'],
+    datasets:[{
+      label:'Adj EBITDA',
+      data:[1012,1350,1929,1429,1794],
+      backgroundColor:['#3b82f6','#3b82f6','#3b82f6','#10b981','#10b981'],
+      borderRadius:4,
+      barPercentage:0.6,
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>'CAD $'+c.parsed.y.toLocaleString()+'M'}}
+    },
+    scales:{
+      x:{grid:{display:false}},
+      y:{beginAtZero:true,grid:{color:'rgba(42,45,66,0.4)'},ticks:{callback:v=>'$'+v}}
+    },
+    animation:{duration:1000,easing:'easeOutQuart'}
+  }
+}));
+
+// ========================================
+// 4. SEGMENT EBITDA STACKED BAR
+// ========================================
+createChartOnVisible('segmentBarChart', ()=>({
+  type:'bar',
+  data:{
+    labels:['FY2025A','FY2026E','FY2027E'],
+    datasets:[
+      {label:'Uranium',data:[713,700,975],backgroundColor:'#3b82f6',borderRadius:2,barPercentage:0.55},
+      {label:'Fuel Services',data:[173,185,215],backgroundColor:'#06b6d4',borderRadius:2,barPercentage:0.55},
+      {label:'Westinghouse',data:[1044,556,611],backgroundColor:'#a78bfa',borderRadius:2,barPercentage:0.55},
+      {label:'Corporate',data:[-100,-100,-105],backgroundColor:'#ef4444',borderRadius:2,barPercentage:0.55}
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'top',labels:{padding:12,font:{size:11}}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': CAD $'+c.parsed.y.toLocaleString()+'M'}}
+    },
+    scales:{
+      x:{stacked:true,grid:{display:false}},
+      y:{stacked:true,grid:{color:'rgba(42,45,66,0.4)'},ticks:{callback:v=>'$'+v}}
+    },
+    animation:{duration:1000,easing:'easeOutQuart'}
+  }
+}));
+
+// ========================================
+// 5. EBITDA BRIDGE (WATERFALL)
+// ========================================
+createChartOnVisible('bridgeChart', ()=>{
+  const labels = ['FY2025A','Dukovany\nroll-off','Uranium\nrepricing','Volume\ngrowth','Fuel\nSvcs','WH\norganic','Cost\ninflation','FX','FY2027E'];
+  const vals = [1929,-488,275,62,42,55,-50,-31,1794];
+  const bases = [];
+  const colors = [];
+  let running = 0;
+  for(let i=0;i<vals.length;i++){
+    if(i===0){bases.push(0);colors.push('#3b82f6');running=vals[i]}
+    else if(i===vals.length-1){bases.push(0);colors.push('#10b981')}
+    else{
+      if(vals[i]>=0){bases.push(running);running+=vals[i];colors.push('#10b981')}
+      else{running+=vals[i];bases.push(running);colors.push('#ef4444')}
+    }
+  }
+  return {
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[
+        {label:'Base',data:bases,backgroundColor:'transparent',borderWidth:0,barPercentage:0.55,stack:'s'},
+        {label:'Value',data:vals.map(Math.abs),backgroundColor:colors,borderRadius:3,barPercentage:0.55,stack:'s'}
+      ]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          filter:t=>t.datasetIndex===1,
+          callbacks:{
+            label:function(c){
+              const v = vals[c.dataIndex];
+              return (v>=0?'+':'')+v.toLocaleString()+' CAD $M';
+            }
+          }
+        }
+      },
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{font:{size:10},maxRotation:0}},
+        y:{stacked:true,beginAtZero:true,max:2200,grid:{color:'rgba(42,45,66,0.4)'},ticks:{callback:v=>'$'+v}}
+      },
+      animation:{duration:1200,easing:'easeOutQuart'}
+    },
+    plugins:[{
+      id:'bridgeLabels',
+      afterDatasetsDraw(chart){
+        const meta = chart.getDatasetMeta(1);
+        const ctx = chart.ctx;
+        meta.data.forEach((bar,i)=>{
+          ctx.save();
+          ctx.fillStyle = vals[i]>=0?'#10b981':'#ef4444';
+          if(i===0) ctx.fillStyle='#e2e4ea';
+          if(i===vals.length-1) ctx.fillStyle='#e2e4ea';
+          ctx.font='bold 10px Inter,sans-serif';
+          ctx.textAlign='center';
+          const v = vals[i];
+          const text = i===0||i===vals.length-1? v.toLocaleString():(v>=0?'+'+v:v);
+          ctx.fillText(text,bar.x,bar.y-6);
+          ctx.restore();
+        });
+      }
+    }]
+  };
+});
+
+// ========================================
+// 6. SCENARIO BAR CHART
+// ========================================
+createChartOnVisible('scenarioBarChart', ()=>({
+  type:'bar',
+  data:{
+    labels:['Deep Bear','Bear','Base','Base+','Bull'],
+    datasets:[{
+      label:'Price Target (US$)',
+      data:[47,71,140,160,194],
+      backgroundColor:['#ef4444','#f59e0b','#3b82f6','#10b981','#10b981'],
+      borderRadius:4,
+      barPercentage:0.5,
+      indexAxis:'y'
+    }]
+  },
+  options:{
+    indexAxis:'y',
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>'US$'+c.parsed.x}},
+      annotation:{
+        annotations:{
+          currentPrice:{
+            type:'line',
+            xMin:115.9,xMax:115.9,
+            borderColor:'#f59e0b',
+            borderWidth:2,
+            borderDash:[4,4],
+            label:{
+              display:true,
+              content:'Current $115.90',
+              position:'start',
+              backgroundColor:'rgba(245,158,11,0.15)',
+              color:'#f59e0b',
+              font:{size:11,weight:'600'},
+              padding:4
+            }
+          }
+        }
+      }
+    },
+    scales:{
+      x:{
+        beginAtZero:true,max:220,
+        grid:{color:'rgba(42,45,66,0.4)'},
+        ticks:{callback:v=>'$'+v}
+      },
+      y:{grid:{display:false}}
+    },
+    animation:{duration:1000,easing:'easeOutQuart'}
+  }
+}));
+
+// ========================================
+// 7. INTERACTIVE SCENARIO SLIDER
+// ========================================
+function updateScenario(){
+  const u3o8 = parseFloat(document.getElementById('uraniumSlider').value);
+  const mult = parseFloat(document.getElementById('multipleSlider').value);
+  document.getElementById('uraniumVal').textContent = '$'+u3o8+'/lb';
+  document.getElementById('multipleVal').textContent = mult.toFixed(1)+'x';
+
+  // Interpolate EBITDA from scenario table:
+  // $60→$1429M(FY26), $70→$1429M(FY26), $90→$1794M(FY27), $110→$1900M(FY27), $130→$2050M(FY27)
+  const pts = [{u:50,e:1200},{u:60,e:1429},{u:70,e:1429},{u:90,e:1794},{u:110,e:1900},{u:130,e:2050},{u:150,e:2200}];
+  let ebitda;
+  if(u3o8 <= pts[0].u) ebitda=pts[0].e;
+  else if(u3o8 >= pts[pts.length-1].u) ebitda=pts[pts.length-1].e;
+  else{
+    for(let i=0;i<pts.length-1;i++){
+      if(u3o8>=pts[i].u && u3o8<=pts[i+1].u){
+        const t = (u3o8-pts[i].u)/(pts[i+1].u-pts[i].u);
+        ebitda = pts[i].e + t*(pts[i+1].e-pts[i].e);
+        break;
+      }
+    }
+  }
+
+  const shares = 435.6; // millions
+  const cadToUsd = 1/1.39;
+  const evCad = ebitda * mult; // CAD $M
+  const equityUsd = evCad * cadToUsd;
+  const priceUsd = equityUsd / shares;
+  const upside = ((priceUsd - 115.9)/115.9*100);
+
+  const el = document.getElementById('impliedPrice');
+  el.textContent = '$'+Math.round(priceUsd);
+  el.style.color = priceUsd >= 115.9 ? 'var(--green)' : 'var(--red)';
+
+  const uEl = document.getElementById('impliedUpside');
+  uEl.textContent = (upside>=0?'+':'')+upside.toFixed(1)+'% '+(upside>=0?'upside':'downside');
+  uEl.style.color = upside>=0?'var(--green)':'var(--red)';
+}
+updateScenario();
+
+// ========================================
+// 8. SOTP DONUT
+// ========================================
+(function(){
+  const wrap = document.querySelector('.donut-wrap');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && !chartInstances['sotpDonut']){
+        const data = [19500,7200,3010,12220,8500];
+        const labels = ['Uranium Mining','Reserve NAV','Fuel Services','Westinghouse','Repricing NPV'];
+        const colors = ['#3b82f6','#06b6d4','#10b981','#a78bfa','#f59e0b'];
+        const ctx = document.getElementById('sotpDonut').getContext('2d');
+        chartInstances['sotpDonut'] = new Chart(ctx,{
+          type:'doughnut',
+          data:{
+            labels:labels,
+            datasets:[{data:data,backgroundColor:colors,borderColor:'#161822',borderWidth:2,hoverOffset:6}]
+          },
+          options:{
+            responsive:true,
+            maintainAspectRatio:true,
+            cutout:'62%',
+            plugins:{
+              legend:{display:false},
+              tooltip:{callbacks:{label:c=>'CAD $'+c.parsed.toLocaleString()+'M'}}
+            },
+            animation:{animateRotate:true,duration:1200}
+          }
+        });
+        // Build legend
+        const legend = document.getElementById('sotpLegend');
+        labels.forEach((l,i)=>{
+          const div = document.createElement('div');
+          div.className='donut-legend-item';
+          div.innerHTML=`<span class="donut-legend-dot" style="background:${colors[i]}"></span><span style="color:var(--text-muted)">${l}</span><span style="margin-left:auto;color:var(--text);font-weight:600">CAD $${(data[i]/1000).toFixed(1)}B</span>`;
+          legend.appendChild(div);
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.2});
+  obs.observe(wrap);
+})();
+
+// ========================================
+// 9. PEER COMPARISON
+// ========================================
+createChartOnVisible('peerChart', ()=>({
+  type:'bar',
+  data:{
+    labels:['Kazatomprom (KAP)','Paladin (PDN)','Cameco (CCJ)','BWXT'],
+    datasets:[{
+      label:'EV/EBITDA',
+      data:[10,25,37,39],
+      backgroundColor:['#5c6078','#5c6078','#10b981','#5c6078'],
+      borderRadius:4,
+      barPercentage:0.5,
+      indexAxis:'y'
+    }]
+  },
+  options:{
+    indexAxis:'y',
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>c.parsed.x+'x EV/EBITDA'}}
+    },
+    scales:{
+      x:{beginAtZero:true,max:50,grid:{color:'rgba(42,45,66,0.4)'},ticks:{callback:v=>v+'x'}},
+      y:{grid:{display:false}}
+    },
+    animation:{duration:1000,easing:'easeOutQuart'}
+  },
+  plugins:[{
+    id:'peerLabels',
+    afterDatasetsDraw(chart){
+      const meta = chart.getDatasetMeta(0);
+      const ctx = chart.ctx;
+      const vals = [10,25,37,39];
+      meta.data.forEach((bar,i)=>{
+        ctx.save();
+        ctx.fillStyle='#e2e4ea';
+        ctx.font='bold 11px Inter,sans-serif';
+        ctx.textBaseline='middle';
+        ctx.fillText(vals[i]+'x',bar.x+8,bar.y);
+        ctx.restore();
+      });
+    }
+  }]
+}));
+
+// ========================================
+// 10. FOOTBALL FIELD (VALUATION RANGE)
+// ========================================
+(function(){
+  const methods = [
+    {label:'Multi-Stage DCF',low:38,mid:47,high:58,color:'#3b82f6'},
+    {label:'Enhanced SOTP',low:65,mid:80,high:90,color:'#06b6d4'},
+    {label:'Reverse-DCF',low:116,mid:116,high:116,color:'#f59e0b'},
+    {label:'EV/EBITDA (Base)',low:119,mid:140,high:160,color:'#10b981'},
+    {label:'Prob-Weighted',low:47,mid:134,high:194,color:'#a78bfa'},
+  ];
+  const maxVal = 210;
+  const current = 115.9;
+  const container = document.getElementById('footballField');
+  // Current price line
+  const currentPct = (current/maxVal*100);
+
+  methods.forEach(m=>{
+    const row = document.createElement('div');
+    row.className='ff-row';
+    const leftPct = m.low/maxVal*100;
+    const widthPct = (m.high-m.low)/maxVal*100;
+    const midPct = m.mid/maxVal*100;
+    row.innerHTML = `
+      <div class="ff-label">${m.label}</div>
+      <div class="ff-bar-wrap">
+        <div class="ff-bar" style="left:${leftPct}%;width:${Math.max(widthPct,0.5)}%;background:${m.color};opacity:0.35"></div>
+        <div class="ff-point" style="left:${midPct}%;width:3px;background:${m.color}"></div>
+        <div class="ff-val" style="position:absolute;left:${midPct}%;top:-18px;transform:translateX(-50%);color:${m.color}">$${m.mid}</div>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+
+  // Add current price line overlay
+  const lineRow = document.createElement('div');
+  lineRow.style.cssText = 'position:relative;height:0;margin-left:132px';
+  lineRow.innerHTML = `
+    <div style="position:absolute;left:${currentPct}%;top:-${methods.length*40+10}px;bottom:-8px;width:2px;background:var(--amber);opacity:0.5"></div>
+    <div style="position:absolute;left:${currentPct}%;top:-${methods.length*40+28}px;transform:translateX(-50%);font-size:10px;color:var(--amber);font-weight:600;white-space:nowrap">Current $115.90</div>
+  `;
+  container.appendChild(lineRow);
+})();
+
+// ========================================
+// 11. RISK MATRIX SCATTER
+// ========================================
+createChartOnVisible('riskMatrix', ()=>{
+  const risks = [
+    {label:'Uranium price collapse (<$60/lb)',x:10,y:80,color:'#ef4444',r:8},
+    {label:'NexGen Arrow on-time',x:40,y:50,color:'#f59e0b',r:7},
+    {label:'Kazatomprom surge',x:15,y:50,color:'#f59e0b',r:6},
+    {label:'Westinghouse integration',x:15,y:50,color:'#f59e0b',r:6},
+    {label:'Nuclear safety event',x:5,y:95,color:'#ef4444',r:9},
+    {label:'Regulatory delays',x:30,y:50,color:'#f59e0b',r:6},
+    {label:'Multiple compression <25x',x:15,y:80,color:'#ef4444',r:7},
+    {label:'US-Canada tariff',x:10,y:50,color:'#f59e0b',r:5},
+    {label:'Chinese self-sufficiency',x:30,y:30,color:'#10b981',r:5},
+    {label:'Sprott SPUT collapse',x:25,y:30,color:'#10b981',r:5},
+  ];
+
+  // Slight offset to avoid overlaps
+  risks[2].x = 18; risks[2].y = 55;
+  risks[3].x = 12; risks[3].y = 45;
+
+  return {
+    type:'scatter',
+    data:{
+      datasets:risks.map(r=>({
+        label:r.label,
+        data:[{x:r.x,y:r.y}],
+        backgroundColor:r.color+'60',
+        borderColor:r.color,
+        borderWidth:2,
+        pointRadius:r.r*1.5,
+        pointHoverRadius:r.r*2,
+      }))
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          callbacks:{
+            label:c=>c.dataset.label+' (Prob: '+c.parsed.x+'%, Severity: '+c.parsed.y+'%)'
+          }
+        },
+        annotation:{
+          annotations:{
+            quadTL:{type:'box',xMin:0,xMax:25,yMin:60,yMax:100,backgroundColor:'rgba(239,68,68,0.04)',borderWidth:0},
+            quadTR:{type:'box',xMin:25,xMax:50,yMin:60,yMax:100,backgroundColor:'rgba(239,68,68,0.08)',borderWidth:0},
+            quadBL:{type:'box',xMin:0,xMax:25,yMin:0,yMax:60,backgroundColor:'rgba(16,185,129,0.03)',borderWidth:0},
+            quadBR:{type:'box',xMin:25,xMax:50,yMin:0,yMax:60,backgroundColor:'rgba(245,158,11,0.04)',borderWidth:0},
+            labelTL:{type:'label',xValue:12.5,yValue:95,content:'High Severity / Low Prob',color:'#ef4444',font:{size:10,weight:'600'},backgroundColor:'transparent'},
+            labelTR:{type:'label',xValue:37.5,yValue:95,content:'High Severity / High Prob',color:'#ef4444',font:{size:10,weight:'700'},backgroundColor:'transparent'},
+            labelBL:{type:'label',xValue:12.5,yValue:5,content:'Low Severity / Low Prob',color:'#10b981',font:{size:10,weight:'600'},backgroundColor:'transparent'},
+            labelBR:{type:'label',xValue:37.5,yValue:5,content:'Low Severity / High Prob',color:'#f59e0b',font:{size:10,weight:'600'},backgroundColor:'transparent'},
+          }
+        }
+      },
+      scales:{
+        x:{
+          title:{display:true,text:'Probability (%)',color:'#8b8fa4',font:{size:12,weight:'600'}},
+          min:0,max:50,
+          grid:{color:'rgba(42,45,66,0.4)'},
+          ticks:{callback:v=>v+'%'}
+        },
+        y:{
+          title:{display:true,text:'Severity / Impact',color:'#8b8fa4',font:{size:12,weight:'600'}},
+          min:0,max:100,
+          grid:{color:'rgba(42,45,66,0.4)'},
+          ticks:{callback:v=>{if(v===20)return'Low';if(v===50)return'Medium';if(v===80)return'High';if(v===95)return'V.High';return''}}
+        }
+      },
+      animation:{duration:1000,easing:'easeOutQuart'}
+    },
+    plugins:[{
+      id:'riskLabels',
+      afterDatasetsDraw(chart){
+        const ctx = chart.ctx;
+        chart.data.datasets.forEach((ds,i)=>{
+          const meta = chart.getDatasetMeta(i);
+          if(meta.data[0]){
+            const pt = meta.data[0];
+            ctx.save();
+            ctx.fillStyle='#c8cad0';
+            ctx.font='10px Inter,sans-serif';
+            ctx.textAlign='left';
+            // Shorten labels
+            const short = ds.label.length > 22 ? ds.label.substring(0,20)+'…' : ds.label;
+            ctx.fillText(short, pt.x + risks[i].r*1.5 + 4, pt.y + 3);
+            ctx.restore();
+          }
+        });
+      }
+    }]
+  };
+});
+
+</script>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>
