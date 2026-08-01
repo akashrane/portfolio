@@ -85,4 +85,26 @@ export const projects: Project[] = [
         tech: ["Python", "FastF1", "Ergast-API", "XGBoost", "SHAP"],
         githubUrl: "https://github.com/akashrane/F1-Pitstop-and-Driver-Position-Strategy",
     },
+    {
+        id: 6,
+        name: "WiseRun",
+        description: "Fitness Analytics for Runners, Riders & Hikers. Turn your workouts into insights and connect Strava in seconds. Built via Lovable.",
+        tech: ["React", "Lovable", "TypeScript", "TailwindCSS"],
+        visitUrl: "https://vigor-viz.lovable.app",
+    },
+    {
+        id: 7,
+        name: "Cameco (CCJ) Equity Research",
+        description: "Comprehensive equity research dashboard and pitch deck for Cameco Corporation (CCJ). Includes interactive charts and deep financial modeling.",
+        tech: ["HTML", "Chart.js", "Financial Modeling", "Equity Research"],
+        visitUrl: "/Cameco_CCJ_Equity_Research_Dashboard.html",
+        videoUrl: "/Cameco_CCJ_Pitch_Final.pdf",
+    },
+    {
+        id: 8,
+        name: "SiliconWatch",
+        description: "Analyst-grade dashboard tracking DRAM, NAND, GPU, and HBM pricing plus supply-chain risks through the 2025–2028 AI memory supercycle.",
+        tech: ["React", "Lovable", "TypeScript", "TailwindCSS"],
+        visitUrl: "https://siliconwatch.lovable.app",
+    },
 ];

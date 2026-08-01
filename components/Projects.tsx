@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FaGithub, FaYoutube, FaExternalLinkAlt } from "react-icons/fa";
+import { FaGithub, FaYoutube, FaExternalLinkAlt, FaFilePdf } from "react-icons/fa";
 import { Project, projects } from "@/data/projects";
 
 const ProjectCard = ({ project }: { project: Project }) => {
@@ -23,7 +23,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded text-sm text-white font-semibold transition-all shadow-lg hover:shadow-cyan-500/20"
             >
-              <FaExternalLinkAlt /> Visit App
+              <FaExternalLinkAlt /> {project.name === "Cameco (CCJ) Equity Research" ? "Visualize Report" : "Visit App"}
             </a>
           )}
           {project.githubUrl && (
@@ -43,7 +43,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-3 py-1 bg-red-600 hover:bg-red-500 rounded text-sm text-white transition-colors"
             >
-              <FaYoutube /> Watch Demo
+              {project.name === "Cameco (CCJ) Equity Research" ? <FaFilePdf /> : <FaYoutube />} {project.name === "Cameco (CCJ) Equity Research" ? "Download PDF" : "Watch Demo"}
             </a>
           )}
         </div>
