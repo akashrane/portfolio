@@ -8,6 +8,16 @@ const Certifications = () => {
 
 
 
+          {/* AI Capabilities and Limitations */}
+          <a href="https://verify.skilljar.com/c/rntfedvo5eeb" target="_blank" rel="noopener noreferrer" className="block outline-none">
+            <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200 h-full cursor-pointer">
+              <img src="/assets/certificates/anthropic-ai.jpg" alt="AI Capabilities and Limitations" className="rounded-lg mb-3 shadow-md w-full" />
+              <h3 className="text-white font-medium text-[15px]">AI Capabilities and Limitations</h3>
+              <p className="text-gray-400 text-xs mt-1">Anthropic</p>
+              <p className="text-gray-500 text-[11px]">Issued Aug 2026</p>
+            </div>
+          </a>
+
           {/* 5-Day AI Agents Intensive Course with Google */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
             <img src="/assets/certificates/google-ai-agents.png" alt="5-Day AI Agents Intensive Course with Google" className="rounded-lg mb-3 shadow-md" />
