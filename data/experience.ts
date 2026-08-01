@@ -12,7 +12,7 @@ export const experiences: Experience[] = [
     id: 1,
     role: "Data Scientist",
     company: "Shoptaki",
-    date: "Jan 2026 - Present",
+    date: "Feb 2025 - Present",
     description: [
       "Architected a video-based liveness pipeline replacing legacy static-image capture with an OpenCV engine, significantly reducing false-spoofing rejections.",
       "Hardened Anti-Spoofing Models by integrating the DeepFace 'yunet' backend alongside MiniFASNet, optimizing bounding-box context to differentiate legitimate users from advanced spoofing attempts.",
