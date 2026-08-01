@@ -12,10 +12,10 @@ const ProjectCard = ({ project }: { project: Project }) => {
     : project.description.slice(0, 150) + (shouldTruncate ? "..." : "");
 
   return (
-    <div className="border border-gray-600 rounded p-4 hover:border-white transition-colors bg-[#1f1f1f]">
-      <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
-        <h3 className="text-lg font-bold text-white mb-1">{project.name}</h3>
-        <div className="flex gap-3 shrink-0">
+    <div className="border border-gray-600 rounded p-5 hover:border-white transition-colors bg-[#1f1f1f] flex flex-col h-full">
+      <div className="flex flex-col mb-3 gap-3">
+        <h3 className="text-xl font-bold text-white leading-tight">{project.name}</h3>
+        <div className="flex flex-wrap gap-2">
           {project.visitUrl && (
             <a
               href={project.visitUrl}
@@ -49,7 +49,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
         </div>
       </div>
 
-      <div className="mb-3 text-sm text-white opacity-90 whitespace-pre-line">
+      <div className="mb-4 text-sm text-white opacity-90 whitespace-pre-line flex-1">
         {displayDescription}
         {shouldTruncate && (
           <button
@@ -61,7 +61,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mt-auto">
         {project.tech.map((tech) => (
           <span
             key={tech}
@@ -81,9 +81,9 @@ const Projects = () => {
       id="projects"
       className="py-16 px-4 sm:px-6 lg:px-8 bg-[#1f1f1f] border-t border-gray-600"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h2 className="text-2xl font-semibold text-white mb-6">Projects</h2>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
