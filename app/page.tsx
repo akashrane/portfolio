@@ -1,3 +1,4 @@
+import InteractiveSurface from "@/components/InteractiveSurface";
 import Header from "@/components/Header";
 import About from "@/components/About";
 import Experience from "@/components/Experience";
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <main className="portfolio">
       <a className="skip-link" href="#projects">Skip to work</a>
+      <InteractiveSurface />
       <Header />
       <About />
       <Projects />
