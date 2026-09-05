@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Akash Rane Portfolio",
-  description: "Personal portfolio of Akash Rane — Masters in Computer Science showcasing projects and publications.",
+  title: "Akash Rane | Data Science, Engineering & AI",
+  description: "Explore Akash Rane’s work in data science, backend engineering, and AI — from real-time data platforms to applied machine learning.",
 };
 
 export default function RootLayout({

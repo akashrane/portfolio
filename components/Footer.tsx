@@ -1,14 +1,2 @@
-const Footer = () => {
-  return (
-    <footer className="py-8 px-4 sm:px-6 lg:px-8 bg-[#1f1f1f] border-t border-gray-600">
-      <div className="max-w-4xl mx-auto text-center">
-        <p className="text-xs text-white opacity-60">
-          © 2025 Akash Rane. All rights reserved.
-        </p>
-      </div>
-    </footer>
-  );
-};
-
-export default Footer;
-
+import { ArrowUpRight } from "lucide-react";
+export default function Footer(){return <footer className="footer shell"><p className="eyebrow">LET’S CONNECT</p><a className="footer-cta" href="https://www.linkedin.com/in/akashrane/" target="_blank" rel="noopener noreferrer">Have something<br/><em>in mind?</em> <ArrowUpRight aria-hidden="true"/></a><div className="footer-bottom"><span>© {new Date().getFullYear()} Akash Rane</span><span>Data. Intelligence. Impact.</span><a href="#home">Back to top ↑</a></div></footer>}
