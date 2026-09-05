@@ -15,7 +15,7 @@ const SkillTable = () => {
                         {skills.map((skill) => (
                             <span 
                                 key={skill} 
-                                className="px-2 py-1 text-xs text-white border border-gray-600 rounded hover:border-white transition-colors cursor-default"
+                                className="skill-tag"
                             >
                                 {skill}
                             </span>

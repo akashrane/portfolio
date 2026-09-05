@@ -55,7 +55,7 @@ const Certifications = () => {
 
           {/* Kaggle - Intermediate Machine Learning */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
-            <img src="public/assets/certificates/certificate1.png" alt="Intermediate Machine Learning" className="rounded-lg mb-3 shadow-md" />
+            <img src="/assets/certificates/certificate1.png" alt="Intermediate Machine Learning" className="rounded-lg mb-3 shadow-md" />
             <h3 className="text-white font-medium text-[15px]">Intermediate Machine Learning</h3>
             <p className="text-gray-400 text-xs mt-1">Kaggle · DeepLearning.AI</p>
 
@@ -64,7 +64,6 @@ const Certifications = () => {
 
           {/* Kaggle - Intro to Machine Learning */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
-            <img src="/assets/certificates/akash-intro-ml.png" alt="Intro to Machine Learning" className="rounded-lg mb-3 shadow-md" />
             <h3 className="text-white font-medium text-[15px]">Intro to Machine Learning</h3>
             <p className="text-gray-400 text-xs mt-1">Kaggle · DeepLearning.AI</p>
             <p className="text-gray-500 text-[11px]">Issued Apr 2024</p>
@@ -73,7 +72,7 @@ const Certifications = () => {
           {/* INSPIRE Program Certification */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 md:p-5 hover:bg-[#2a2a2a] transition-colors duration-200">
             <div className="flex items-center gap-3 mb-2">
-              <img src="/assets/logos/pace.svg" alt="Pace University" className="w-5 h-5 opacity-90" />
+              <img src="/assets/logos/Pace.svg" alt="Pace University" className="w-5 h-5 opacity-90" />
               <h3 className="text-white font-medium text-[15px] leading-snug">INSPIRE Program Certification</h3>
             </div>
             <p className="text-gray-400 text-xs mb-1">Pace University</p>
@@ -94,7 +93,7 @@ const Certifications = () => {
           {/* Android Development (Udemy) */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 md:p-5 hover:bg-[#2a2a2a] transition-colors duration-200">
             <div className="flex items-center gap-3 mb-2">
-              <img src="/assets/logos/udemy.svg" alt="Udemy" className="w-5 h-5 opacity-90" />
+              <img src="/assets/logos/Udemy.svg" alt="Udemy" className="w-5 h-5 opacity-90" />
               <h3 className="text-white font-medium text-[15px] leading-snug">Android Development</h3>
             </div>
             <p className="text-gray-400 text-xs mb-1">Udemy</p>
@@ -103,7 +102,6 @@ const Certifications = () => {
 
           {/* Kaggle - Python */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
-            <img src="/assets/certificates/akash-python.png" alt="Python" className="rounded-lg mb-3 shadow-md" />
             <h3 className="text-white font-medium text-[15px]">Python</h3>
             <p className="text-gray-400 text-xs mt-1">Kaggle · DeepLearning.AI</p>
             <p className="text-gray-500 text-[11px]">Issued Jun 2023</p>
@@ -111,7 +109,6 @@ const Certifications = () => {
 
           {/* Kaggle - Intro to Programming */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 hover:bg-[#2a2a2a] transition-colors duration-200">
-            <img src="/assets/certificates/akash-intro-programming.png" alt="Intro to Programming" className="rounded-lg mb-3 shadow-md" />
             <h3 className="text-white font-medium text-[15px]">Intro to Programming</h3>
             <p className="text-gray-400 text-xs mt-1">Kaggle · DeepLearning.AI</p>
             <p className="text-gray-500 text-[11px]">Issued Jun 2023</p>
@@ -120,7 +117,7 @@ const Certifications = () => {
           {/* Introduction to Programming Using Python (Udemy) */}
           <div className="bg-[#1f1f1f] border border-gray-800/60 rounded-xl p-4 md:p-5 hover:bg-[#2a2a2a] transition-colors duration-200">
             <div className="flex items-center gap-3 mb-2">
-              <img src="/assets/logos/udemy.svg" alt="Udemy" className="w-5 h-5 opacity-90" />
+              <img src="/assets/logos/Udemy.svg" alt="Udemy" className="w-5 h-5 opacity-90" />
               <h3 className="text-white font-medium text-[15px] leading-snug">Introduction to Programming Using Python</h3>
             </div>
             <p className="text-gray-400 text-xs mb-1">Udemy</p>
