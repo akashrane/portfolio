@@ -16,6 +16,7 @@ export default function Home() {
       <Experience />
       <Projects />
       <Skills />
+      <Resume />
       <Publications />
       <Certifications />
       <Footer />

@@ -66,14 +66,20 @@ const About = () => {
                 Whether building data pipelines, training predictive models, or developing KPI dashboards, I am driven to solve complex data problems. I am actively seeking full-time opportunities in Backend Engineering, Data Science, or Data Analytics where I can contribute this comprehensive, full-stack data expertise.
               </p>
             </div>
-            {/* Download Resume Button */}
-            <div className="pt-4">
+            {/* Resume Action Buttons */}
+            <div className="pt-4 flex flex-wrap items-center gap-3">
               <a
-                href="/resume.pdf"
-                download
-                className="inline-block border border-white px-4 py-[0.6rem] text-white hover:bg-white hover:text-[#1f1f1f] transition-all"
+                href="/resume"
+                className="inline-block bg-white text-[#1f1f1f] px-5 py-[0.6rem] font-semibold text-sm hover:bg-gray-200 transition-all rounded"
               >
-                Download Resume
+                View Resume
+              </a>
+              <a
+                href="/Akash_Rane_Resume.pdf"
+                download="Akash_Rane_Resume.pdf"
+                className="inline-block border border-white px-4 py-[0.6rem] text-sm text-white hover:bg-white hover:text-[#1f1f1f] transition-all rounded"
+              >
+                Download PDF
               </a>
             </div>
           </div>
